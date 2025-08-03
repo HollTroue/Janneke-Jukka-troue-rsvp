@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jukka & Janneke's Wedding</title>
+   <!-- Load Tailwind CSS (dev only) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Load Supabase client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Your custom Supabase logic -->
+<script>
+  const supabaseUrl = 'https://qrbvsyukjnkuucogistm.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYnZzeXVram5rdXVjb2dpc3RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNTE5MzYsImV4cCI6MjA2NTgyNzkzNn0.0jk8jyxmu-QIPHQaRMR19pkGHAHlAk2MZCAzHbwehb0';
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+</script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pinyon+Script&family=Times+New+Roman&family=Abadi+MT+Condensed+Light&display=swap" rel="stylesheet">
+    <link rel="icon" href="image_25ef05.png" type="image/png">
+    <style>
+        /* Custom Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pinyon+Script&display=swap');
+        
+        body {
+            font-family: 'Abadi', sans-serif; /* Default font */
+            background-color: #F6F4F1; /* Lightest theme color */
+            color: #706B4C; /* Darkest theme color */
+        }
+        /* Common styles for fade overlays */
+section {
+  position: relative; /* to contain the pseudo-elements */
+  z-index: 0; /* ensure overlays are behind content */
+}
+
+/* Bottom fade on every section */
+section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px; /* Adjust the fade height */
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--section-bg-color)
+  );
+}
+
+/* Top fade on every section except first */
+section:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 40px; /* Match bottom fade height */
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    transparent,
+    var(--section-bg-color)
+  );
+}
+#home {
+  --section-bg-color: #FFFEF2; /* Off white background */
+  background-color: var(--section-bg-color);
+}
+
+#story {
+  --section-bg-color: #FFFEF2; /* Same as home if needed */
+  background-color: var(--section-bg-color);
+}
+
+#schedule {
+  --section-bg-color: #FFFEF2; /* Slightly different light cream */
+  background-color: var(--section-bg-color);
+}
+
+#dresscode {
+  --section-bg-color: #FFFEF2;
+  background-color: var(--section-bg-color);
+}
+
+#gifts {
+  --section-bg-color: #FFFEF2; /* Khaki */
+  background-color: var(--section-bg-color);
+}
+
+#venue {
+  --section-bg-color: #FFFEF2;
+  background-color: var(--section-bg-color);
+}
+
+#accommodation {
+  --section-bg-color: #FFFEF2;
+  background-color: var(--section-bg-color);
+}
+
+#rsvp {
+  --section-bg-color: #FFFEF2;
+  background-color: var(--section-bg-color);
+}
+
+
+        #rsvpForm label,
+#rsvpForm span,
+#rsvpForm input[type="radio"] + span,
+#rsvpForm input[type="checkbox"] + label,
+#rsvpForm input,
+#rsvpForm textarea {
+  font-family: 'Abadi', sans-serif; /* consistent font */
+  font-size: 1rem; /* consistent size, adjust if you want */
+  color: #3e2f1c; /* dark dark brown, consistent text color */
+}
+.section-title-hat {
+  display: flex;
+  margin-bottom: -1.5rem;
+}
+
+.section-title-hat img {
+  width: 80px; /* or adjust as needed */
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+
+
+        /* Applying custom fonts to specific elements */
+        .font-signature {
+            font-family: 'Pinyon Script', cursive;
+        }
+
+        .font-times {
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .section-title-hat {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -1.5rem; /* pull it closer to the title */
+}
+
+.section-title-hat img {
+  width: 80px; /* adjust size as needed */
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 0.5rem; /* space below the image */
+}
+
+        
+        /* A custom font since HarlowSolid Italic and Aspire are not standard web fonts */
+        .font-harlow {
+            font-family: 'Dancing Script', cursive; /* Using a similar elegant, script-like font */
+            font-style: italic;
+        }
+
+        .font-abadi {
+             font-family: 'Abadi MT Condensed Light', sans-serif;
+        }
+
+        /* Custom Colors from the theme */
+        .bg-theme-dark-olive { background-color: #706B4C; }
+        .bg-theme-light-olive { background-color: #A1997E; }
+        .bg-theme-khaki { background-color: #CCC1B0; }
+        .bg-theme-off-white { background-color: #FFFEF2; }
+
+        .text-theme-dark-olive { color: #706B4C; }
+        .text-theme-light-olive { color: #A1997E; }
+        .text-theme-khaki { color: #CCC1B0; }
+        .text-theme-off-white { color: #FFFEF2; }
+        
+        .border-theme-dark-olive { border-color: #706B4C; }
+
+        /* Full-screen hero section */
+        .hero-screen {
+            height: 100vh;
+            width: 100%;
+        }
+        /* Modal styles */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+         /* ... existing styles ... */
+
+    section {
+        opacity: 0;
+        transition: opacity 1s ease-in-out; /* Fade over 1 second, adjust as needed */
+    }
+    .fade-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* adjust height as needed */
+  pointer-events: none; /* so it doesn't interfere */
+  background: linear-gradient(to bottom, rgba(246, 244, 241, 0) 0%, #fdfcf9 100%);
+  /* This fades from transparent (the current section's color) to next section color */
+}
+.fade-bottom-story {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(246,244,241,0) 0%, #fdfcf9 100%);
+}
+#story::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(246,244,241,0) 0%, #fdfcf9 100%);
+  z-index: 10;
+}
+
+
+.fade-bottom-schedule {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(253,252,249,0) 0%, #CCC1B0 100%);
+}
+#home::before,
+#home::after {
+  display: none !important;
+}
+
+
+
+    section.fade-in {
+        opacity: 1;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+    </style>
+</head>
+<body class="bg-theme-off-white">
+
+    <!-- Header/Navigation -->
+    <header class="bg-theme-off-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-center items-center">
+                <div class="flex space-x-4 md:space-x-8 text-sm md:text-base text-theme-dark-olive font-sans">
+                    <a href="#home" class="hover:text-theme-light-olive transition duration-300">Home</a>
+                    <a href="#story" class="hover:text-theme-light-olive transition duration-300">Our Story</a>
+                    <a href="#schedule" class="hover:text-theme-light-olive transition duration-300">Schedule</a>
+                    <a href="#dresscode" class="hover:text-theme-light-olive transition duration-300">Dress Code</a>
+                    <a href="#gifts" class="hover:text-theme-light-olive transition duration-300">Gifts</a>
+                    <a href="#venue" class="hover:text-theme-light-olive transition duration-300">Venue</a>
+                    <a href="#accommodation" class="hover:text-theme-light-olive transition duration-300">Accommodation</a>
+
+                    <a href="#rsvp" class="bg-theme-dark-olive text-white px-4 py-2 rounded-full hover:bg-theme-light-olive transition duration-300">RSVP</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+<section id="home" class="relative min-h-screen flex items-center justify-center text-white text-center overflow-hidden">
+
+  <!-- Single full background image -->
+  <div class="absolute inset-0">
+    <div 
+      class="w-full h-full bg-no-repeat bg-center bg-contain" 
+      style="background-image: url('images/cover_Final.png');">
+    </div>
+  </div>
+
+  <!-- Foreground content directly on image -->
+  <div class="relative z-10">
+ <h1 class="font-signature text-7xl md:text-9xl lg:text-[10rem] leading-none text-white drop-shadow-xl">Jukka & Janneke</h1>
+<p class="font-times text-2xl md:text-3xl mt-4 text-white drop-shadow">05.12.2025</p>
+
+  </div>
+
+</section>
+
+
+
+
+
+
+<!-- Our Story Section -->
+<section id="story" class="relative py-20 md:py-32 bg-theme-off-white overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="flex flex-col md:flex-row items-start gap-12 md:gap-16 justify-center">
+      
+      <!-- Left Image -->
+      <div class="w-full md:w-auto">
+        <img src="images/filling.png" alt="Jukka and Janneke" 
+             class="rounded-lg shadow-2xl object-contain border-4" 
+             style="max-height: 600px; border:none; max-width: 100%;">
+      </div>
+
+      <!-- Text Content -->
+      <div class="w-full md:w-1/2 text-center md:text-left relative z-10">
+        <h2 class="font-harlow text-5xl mb-6 text-theme-dark-olive">Our Story</h2>
+        <div class="font-sans text-lg text-theme-dark-olive space-y-4 leading-relaxed">
+          <p>Jukka and Janneke’s love story began when they were just six years old. What seemed like a simple childhood encounter turned out to be a divine, God-ordained moment—the beginning of something truly special.</p>
+          <p>A deep friendship blossomed early on, forming a bond so genuine and strong that people often said, “One day, they’ll end up together.”</p>
+          <p>We were each other’s best friend, and by God’s grace, we carried that friendship into adulthood. From running hurdles side by side and sharing athletic practices, to dancing through our first year at Stellenbosch—every chapter added meaning to our journey.</p>
+          <p>And now, as we prepare to say “I do,” we believe our story is not only one worth telling, but a beautiful gift from God—one we cherish with grateful hearts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="absolute inset-y-0 right-0 flex items-center justify-end z-0 pointer-events-none" style="margin-right: -10%;">
+  <img 
+    src="../images/olive.png" 
+    alt="Watermark" 
+    class="w-[90%] opacity-10 object-contain" 
+  />
+</div>
+
+
+  <div
+    class="fade-bottom-story"
+    style="
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(246, 244, 241, 0) 0%,
+        #fdfcf9 100%
+      );
+      z-index: 10;
+    "
+  ></div>
+</section>
+
+
+<!-- Wedding Schedule Section -->
+<section id="schedule" class="py-20 md:py-32 bg-[#fdfcf9]">
+  <!-- Watermark image overlay -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img
+          src="../images/ringingBellsWatermark.png"
+          alt="Watermark"
+          class="w-2/4 opacity-10 object-contain" 
+        />
+      </div>
+  <div class="container mx-auto px-6 text-center">
+    <div class="section-title-hat">
+  <img src="../images/title.png" alt="Decorative hat" />
+</div>
+    <h2 class="font-harlow text-6xl mb-12 text-theme-dark-olive">Wedding Schedule</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Arrival -->
+      <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 border-4" style="background-color: #FFFEF2; border-color: #A1997E; height: 100px;">
+        <div class="flex items-center justify-center h-full w-full">
+          <div>
+            <h3 class="font-harlow text-2xl text-theme-dark-olive">Arrival</h3>
+            <p class="font-harlow text-lg text-theme-dark-olive">14:00</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-Wedding -->
+      <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 border-4" style="background-color: #FFFEF2; border-color: #A1997E; height: 100px;">
+        <div class="flex items-center justify-center h-full w-full">
+          <div>
+            <h3 class="font-harlow text-2xl text-theme-dark-olive">Pre-Wedding</h3>
+            <p class="font-harlow text-lg text-theme-dark-olive">14:30</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ceremony -->
+      <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 border-4" style="background-color: #FFFEF2; border-color: #A1997E; height: 100px;">
+        <div class="flex items-center justify-center h-full w-full">
+          <div>
+            <h3 class="font-harlow text-2xl text-theme-dark-olive">Ceremony</h3>
+            <p class="font-harlow text-lg text-theme-dark-olive">15:00</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reception -->
+      <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 border-4" style="background-color: #FFFEF2; border-color: #A1997E; height: 100px;">
+        <div class="flex items-center justify-center h-full w-full">
+          <div>
+            <h3 class="font-harlow text-2xl text-theme-dark-olive">Reception</h3>
+            <p class="font-harlow text-lg text-theme-dark-olive">18:00</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="countdown" class="mt-10 mb-14">
+  <h3 class="font-sans text-3xl text-theme-dark-olive mb-4">Countdown to the Wedding</h3>
+  <div class="flex justify-center gap-8 text-theme-dark-olive font-harlow text-xl md:text-2xl">
+    <div>
+      <span id="days">0</span><br />Days
+    </div>
+    <div>
+      <span id="hours">0</span><br />Hours
+    </div>
+    <div>
+      <span id="minutes">0</span><br />Minutes
+    </div>
+    <div>
+      <span id="seconds">0</span><br />Seconds
+    </div>
+  </div>
+</div>
+     <!-- Fade from #fdfcf9 to #CCC1B0 -->
+</section>
+
+
+
+<section id="dresscode" class="bg-theme-off-white min-h-screen flex items-center py-20 relative overflow-hidden">
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+
+      <!-- Left Image Column (now larger and more responsive) -->
+      <div class="w-full md:w-1/3">
+        <img 
+          src="../images/dresscolor.jpeg" 
+          alt="Dress Code Mood Board" 
+          class="w-full h-full max-h-[600px] object-cover rounded-lg shadow-lg"
+        />
+      </div>
+
+      <!-- Text Content -->
+      <div class="relative w-full md:w-1/2 text-center md:text-left flex flex-col justify-center" style="padding-left: 25px; z-index: 10;">
+        <h2 class="font-harlow text-7xl mb-6 text-theme-dark-olive">Dress Code</h2>
+        <div class="font-sans text-lg text-theme-dark-olive space-y-4 leading-relaxed">
+          <p>We would love for our guests to join us in celebrating with a formal and elegant attire.</p>
+          <p>Think sophisticated, chic, and ready for a memorable evening of celebration. We've put together a mood board to inspire your outfits. We can't wait to see you all dressed up!</p>
+          <p class="mt-4 font-bold">Colors to consider: Earthy tones, soft neutrals, and deep jewel tones.</p>
+        </div>
+      </div>
+
+      <!-- Watermark Image -->
+      <div class="absolute right-10 top-1/2 transform -translate-y-1/2 z-0 pointer-events-none hidden md:block">
+        <img 
+          src="../images/olive5.png" 
+          alt="Watermark" 
+          class="w-full opacity-10 object-contain"
+        />
+      </div>
+
+    </div>
+    <div class="fade-bottom"></div>
+  </div>
+</section>
+
+
+<!-- Venue Section -->
+<section id="venue" class="relative py-20 md:py-32 bg-theme-off-white overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="section-title-hat">
+  <img src="../images/title3.png" alt="Decorative hat" />
+</div>
+    <h2 class="font-harlow text-5xl mb-12 text-center text-theme-dark-olive">The Venue</h2>
+
+    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+
+      <!-- Carousel Section -->
+      <div class="w-full md:w-1/2 relative">
+        <div id="carousel" class="flex overflow-x-hidden scroll-smooth snap-x snap-mandatory rounded-lg shadow-2xl h-[500px] hide-scrollbar">
+          <img src="../images/Venue.png" alt="Venue 1" class="snap-center min-w-full object-cover" />
+          <img src="https://i0.wp.com/venueadvisor.co.za/wp-content/uploads/2024/03/273688781_7599031683448264_2888700849323480573_n.jpg?resize=1000%2C1000&ssl=1" alt="Venue 2" class="snap-center min-w-full object-cover" />
+          <img src="https://i0.wp.com/venueadvisor.co.za/wp-content/uploads/2024/03/273685221_7599032320114867_148898724063922566_n.jpg?resize=1000%2C1000&ssl=1" alt="Venue 3" class="snap-center min-w-full object-cover" />
+          <img src="https://i0.wp.com/venueadvisor.co.za/wp-content/uploads/2024/03/273688781_7599031683448264_2888700849323480573_n.jpg?resize=1000%2C1000&ssl=1" alt="Venue 4" class="snap-center min-w-full object-cover" />
+          <img src="https://bellandblossom.co.za/wp-content/uploads/2022/07/Glass-Dome-Chapel.jpg" alt="Venue 5" class="snap-center min-w-full object-cover" />
+        </div>
+
+        <!-- Arrows -->
+        <button onclick="scrollCarousel(-1)" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#706B4C]/80 text-white p-2 rounded-full shadow-md hover:bg-[#706B4C] z-10">
+          &#8592;
+        </button>
+        <button onclick="scrollCarousel(1)" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#706B4C]/80 text-white p-2 rounded-full shadow-md hover:bg-[#706B4C] z-10">
+          &#8594;
+        </button>
+      </div>
+
+      <!-- Details Section -->
+      <div class="relative w-full md:w-1/2 space-y-8 z-10">
+       <div class="bg-[#D3CFB8] rounded-lg p-6 shadow-md text-theme-dark-olive">
+  <h3 class="font-harlow text-4xl mb-2">Address</h3>
+  <p class="font-sans text-lg mb-4">721 Klippan St, Montana, Pretoria, 0151</p>
+  <a href="https://www.google.com/maps/dir//721+Klippan+St,+Montana,+Pretoria,+0151,+South+Africa" 
+     target="_blank" 
+     rel="noopener" 
+     class="inline-block rounded-md px-5 py-2 bg-theme-olive text-white font-semibold shadow hover:bg-theme-dark-olive transition">
+    Get directions
+  </a>
+</div>
+
+        <div class="bg-[#D3CFB8] rounded-lg p-6 shadow-md text-theme-dark-olive">
+          <h3 class="font-harlow text-4xl mb-2">Address</h3>
+          <p class="font-sans text-lg">721 Klippan St, Montana, Pretoria, 0151</p>
+        </div>
+        <div class="bg-[#D3CFB8] rounded-lg p-6 shadow-md text-theme-dark-olive">
+          <h3 class="font-harlow text-4xl mb-2">Drive</h3>
+          <p class="font-sans text-lg">Approximately 30 minutes from Pretoria East</p>
+        </div>
+
+        <!-- Watermark -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 hidden md:block">
+          <img src="../images/olive.png" alt="Watermark" class="w-2/3 opacity-5 object-contain" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  
+  /* ... (your existing custom fonts and colors) ... */
+
+  /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>
+
+<section id="accommodation" class="py-20 md:py-32 bg-[#fdfcf9] relative overflow-hidden">
+  <div class="container mx-auto px-2 md:px-8 relative z-10 flex flex-col items-center">
+    <!-- Decorative Motif & Title -->
+    <img src="../images/title7.png" alt="Decorative Motif" class="h-12 md:h-16 w-auto mb-2" />
+    <h2 class="font-harlow text-5xl md:text-7xl text-theme-dark-olive mb-2 text-center leading-tight tracking-tight">
+      Accommodation
+    </h2>
+    <p class="text-theme-dark-olive text-base md:text-xl mb-8 text-center font-sans max-w-2xl">
+      Checkout these venues nearby the wedding venue and feel free to book if necessary.
+    </p>
+    <div class="w-full flex flex-col md:flex-row items-stretch justify-center gap-8">
+      <!-- Left: Illustration -->
+      <div class="w-full md:w-1/2 flex items-stretch justify-center md:justify-end">
+        <img src="../images/Accomodation.jpg"
+             alt="Accommodation Illustration"
+             class="w-full h-[350px] md:w-[95%] md:h-[500px] lg:h-[600px] rounded-2xl object-cover"
+             style="border:none;box-shadow:none;" />
+      </div>
+      <!-- Right: Dynamic hotel block -->
+      <div class="w-full md:w-1/2 flex items-stretch justify-center md:justify-start">
+        <div class="relative w-full max-w-md h-[350px] md:h-[500px] lg:h-[600px]">
+          <div id="slides" class="relative w-full h-full">
+
+            <!-- Batter Boys -->
+            <div class="slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out flex flex-col h-full justify-between">
+              <div class="flex flex-col h-full rounded-xl border border-[#dedede] bg-white/90 shadow-lg overflow-hidden">
+                <div class="relative w-full flex-shrink-0" style="height:50%;">
+                  <img src="https://d1zyr4xmqw3mni.cloudfront.net/image/1600/gallery/20111/property/99970.jpg" alt="Batter Boys Photo" class="object-cover w-full h-full" />
+                  <button id="prevSlide" class="absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                  </button>
+                  <button id="nextSlide" class="absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-grow h-1/2 px-4 py-4">
+                  <div class="font-bold text-2xl text-theme-dark-olive mb-1">Batter Boys</div>
+                  <div class="text-theme-dark-olive text-base mb-1">Modern halls, top-rated service</div>
+                  <div class="font-sans text-lg mb-1">012 548 0101</div>
+                  <a href="https://batterboys.co.za" target="_blank" rel="noopener" class="underline text-theme-olive font-semibold hover:text-theme-dark-olive mb-2">Website</a>
+                  <a
+                    href="https://www.google.com/maps/dir//32+Jeugd+Road,+Montana,+Pretoria,+0182,+South+Africa"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-block rounded-md px-5 py-2 font-semibold shadow transition"
+                    style="background-color:#706B4C;color:#fff;">
+                    Get directions
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Klyne Jiweel Guest House -->
+            <div class="slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out flex flex-col h-full justify-between">
+              <div class="flex flex-col h-full rounded-xl border border-[#dedede] bg-white/90 shadow-lg overflow-hidden">
+                <div class="relative w-full flex-shrink-0" style="height:50%;">
+                  <img src="https://d1zyr4xmqw3mni.cloudfront.net/image/1600/gallery/32490/property/317861.jpg" alt="Klyne Jiweel Guest House Photo" class="object-cover w-full h-full" />
+                  <button id="prevSlide" class="absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                  </button>
+                  <button id="nextSlide" class="absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-grow h-1/2 px-4 py-4">
+                  <div class="font-bold text-2xl text-theme-dark-olive mb-1">Klyne Jiweel Guest House</div>
+                  <div class="text-theme-dark-olive text-base mb-1">Serene, modern rooms, top reviews</div>
+                  <div class="font-sans text-lg mb-1">076 361 2832</div>
+                  <a href="https://klynejiweel.co.za" target="_blank" rel="noopener" class="underline text-theme-olive font-semibold hover:text-theme-dark-olive mb-2">Website</a>
+                  <a
+                    href="https://www.google.com/maps/dir//529+Dr+Van+Der+Merwe+Rd,+Christiaanville+AH,+Pretoria,+0151,+South+Africa"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-block rounded-md px-5 py-2 font-semibold shadow transition"
+                    style="background-color:#706B4C;color:#fff;">
+                    Get directions
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delectus Manor -->
+            <div class="slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out flex flex-col h-full justify-between">
+              <div class="flex flex-col h-full rounded-xl border border-[#dedede] bg-white/90 shadow-lg overflow-hidden">
+                <div class="relative w-full flex-shrink-0" style="height:50%;">
+                  <img src="https://delectusmanor.co.za/wp-content/uploads/2025/05/IMG_20250116_131130-copy-1536x710.webp" alt="Delectus Manor Photo" class="object-cover w-full h-full" />
+                  <button id="prevSlide" class="absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                  </button>
+                  <button id="nextSlide" class="absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-grow h-1/2 px-4 py-4">
+                  <div class="font-bold text-2xl text-theme-dark-olive mb-1">Delectus Manor</div>
+                  <div class="text-theme-dark-olive text-base mb-1">Tuscan-style venue, private gardens</div>
+                  <div class="font-sans text-lg mb-1">012 548 9900</div>
+                  <a href="https://delectusmanor.co.za" target="_blank" rel="noopener" class="underline text-theme-olive font-semibold hover:text-theme-dark-olive mb-2">Website</a>
+                  <a
+                    href="https://www.google.com/maps/dir//389+Dr+Van+Der+Merwe+Drive,+Montana,+Pretoria,+0159,+South+Africa"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-block rounded-md px-5 py-2 font-semibold shadow transition"
+                    style="background-color:#706B4C;color:#fff;">
+                    Get directions
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prinshof Manor -->
+            <div class="slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out flex flex-col h-full justify-between">
+              <div class="flex flex-col h-full rounded-xl border border-[#dedede] bg-white/90 shadow-lg overflow-hidden">
+                <div class="relative w-full flex-shrink-0" style="height:50%;">
+                  <img src="https://www.q2b.co.za/Content/images/26/Location/1526/4363.jpg" alt="Prinshof Manor Photo" class="object-cover w-full h-full" />
+                  <button id="prevSlide" class="absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                  </button>
+                  <button id="nextSlide" class="absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-grow h-1/2 px-4 py-4">
+                  <div class="font-bold text-2xl text-theme-dark-olive mb-1">Prinshof Manor</div>
+                  <div class="text-theme-dark-olive text-base mb-1">Tranquil retreat with leafy views</div>
+                  <div class="font-sans text-lg mb-1">083 268 3330</div>
+                  <a href="https://prinshofmanor.co.za" target="_blank" rel="noopener" class="underline text-theme-olive font-semibold hover:text-theme-dark-olive mb-2">Website</a>
+                  <a
+                    href="https://www.google.com/maps/dir//690+Dr+Swanepoel+Road,+Magalieskruin,+Pretoria,+0186,+South+Africa"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-block rounded-md px-5 py-2 font-semibold shadow transition"
+                    style="background-color:#706B4C;color:#fff;">
+                    Get directions
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- La Perna -->
+            <div class="slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out flex flex-col h-full justify-between">
+              <div class="flex flex-col h-full rounded-xl border border-[#dedede] bg-white/90 shadow-lg overflow-hidden">
+                <div class="relative w-full flex-shrink-0" style="height:50%;">
+                  <img src="https://laperna.co.za/wp-content/uploads/2023/09/La-Perna_pg-12_3.png" alt="La Perna Photo" class="object-cover w-full h-full" />
+                  <button id="prevSlide" class="absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                  </button>
+                  <button id="nextSlide" class="absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/70 hover:bg-[#e2e5dc] shadow text-theme-dark-olive">
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-grow h-1/2 px-4 py-4">
+                  <div class="font-bold text-2xl text-theme-dark-olive mb-1">La Perna</div>
+                  <div class="text-theme-dark-olive text-base mb-1">Family events with lively gardens</div>
+                  <div class="font-sans text-lg mb-1">071 147 5149</div>
+                  <a href="https://laperna.co.za" target="_blank" rel="noopener" class="underline text-theme-olive font-semibold hover:text-theme-dark-olive mb-2">Website</a>
+                  <a
+                    href="https://www.google.com/maps/dir//780+Breedt+Street,+Montana,+Pretoria,+0186,+South+Africa"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-block rounded-md px-5 py-2 font-semibold shadow transition"
+                    style="background-color:#706B4C;color:#fff;">
+                    Get directions
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<Script>// JavaScript: Automated Slideshow for Accommodation Blocks
+// Manual slideshow: arrows overlayed in image, no auto-slide
+window.addEventListener('DOMContentLoaded', () => {
+  const slides = document.querySelectorAll('#slides .slide');
+  const totalSlides = slides.length;
+  let currentIndex = 0;
+
+  function setButtonEvents() {
+    slides.forEach((slide, i) => {
+      if (i === currentIndex) {
+        slide.querySelector('#prevSlide').onclick = () => showSlide((currentIndex - 1 + totalSlides) % totalSlides);
+        slide.querySelector('#nextSlide').onclick = () => showSlide((currentIndex + 1) % totalSlides);
+      }
+    });
+  }
+
+  function showSlide(idx) {
+    slides.forEach((slide, i) => {
+      slide.style.opacity = i === idx ? '1' : '0';
+      slide.style.position = i === idx ? 'relative' : 'absolute';
+      slide.style.zIndex = i === idx ? 2 : 1;
+      slide.style.pointerEvents = i === idx ? 'auto' : 'none';
+    });
+    currentIndex = idx;
+    setButtonEvents();
+  }
+
+  showSlide(0);
+});
+
+
+</Script>
+
+
+<section id="rsvp" class="py-20 md:py-32 bg-theme-off-white">
+  <div class="container mx-auto px-6">
+    <div class="section-title-hat">
+      <img src="../images/title5.png" alt="Decorative hat" />
+    </div>
+    <!-- RSVP Heading centered at top -->
+    <h2 class="font-harlow text-7xl text-theme-dark-olive mb-12 text-center w-full">
+      RSVP
+    </h2>
+
+    <!-- Form and Image side-by-side -->
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start">
+      <!-- RSVP Form with watermark -->
+      <div class="relative w-full md:w-1/2">
+        <!-- Watermark behind the form -->
+        <img 
+          src="../images/watermark2.png" 
+          alt="Watermark" 
+          class="absolute top-0 left-0 w-full h-full object-contain opacity-10 pointer-events-none select-none" 
+          style="z-index: 0;"
+        />
+          
+        <form id="rsvpForm" class="relative space-y-6 font-sans bg-transparent z-10">
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-theme-dark-olive">Full Name(s)</label>
+            <input type="text" id="fullName" name="fullName" required
+            class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
+            <div id="guestStatusMessage" class="mt-2 text-sm"></div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-theme-dark-olive">Will you be attending?</label>
+            <div class="mt-2 flex items-center space-x-6">
+              <label for="attendingYes" class="flex items-center">
+                <input type="radio" id="attendingYes" name="attendance" value="Yes" required
+                  class="focus:ring-theme-light-olive h-4 w-4 text-theme-dark-olive border-theme-khaki" />
+                <span class="ml-2 text-theme-dark-olive">See you there</span>
+              </label>
+              <label for="attendingNo" class="flex items-center">
+                <input type="radio" id="attendingNo" name="attendance" value="No"
+                  class="focus:ring-theme-light-olive h-4 w-4 text-theme-dark-olive border-theme-khaki" />
+                <span class="ml-2 text-theme-dark-olive">Can't make it</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-theme-dark-olive">Email Address</label>
+            <input type="email" id="email" name="email" required
+              class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
+          </div>
+
+          <div>
+            <label for="phone" class="block text-sm font-medium text-theme-dark-olive">Phone Number</label>
+            <input type="tel" id="phone" name="phone"
+              class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
+          </div>
+
+          <!-- Plus One Checkbox -->
+<div id="plusOneSection" class="hidden">
+  <label for="plusOneName" class="block text-sm font-medium text-theme-dark-olive">Plus One Name:</label>
+  <input type="text" name="plusOneName" id="plusOneName" ... />
+</div>
+
+
+          <!-- Plus One Name Input -->
+          <div id="plusOneSection" class="hidden">
+            <label for="plusOneName" class="block text-sm font-medium text-theme-dark-olive">Plus One Name:</label>
+            <input type="text" name="plusOneName" id="plusOneName"
+              class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
+          </div>
+
+          <div>
+            <label for="songRequest" class="block text-sm font-medium text-theme-dark-olive">Song Request</label>
+            <input type="text" id="songRequest" name="songRequest" placeholder="Your favorite song for the celebration"
+              class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
+          </div>
+
+          <div class="text-center pt-4">
+            <button type="submit"
+              class="w-full bg-theme-dark-olive text-white font-bold py-3 px-6 rounded-full hover:bg-theme-light-olive focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-dark-olive transition duration-300">
+              Submit RSVP
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- RSVP Image matching form height, cropped top-to-bottom -->
+      <div id="rsvpImageContainer" class="w-full md:w-1/2 self-start">
+        <img 
+          src="../images/RSVP.jpg" 
+          alt="RSVP Image" 
+          class="rounded-xl object-cover object-top w-full h-full" 
+          style="max-height: 100%; opacity: 0.5;" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show/hide plus one name input based on checkbox
+    document.addEventListener('DOMContentLoaded', () => {
+      const plusOneCheckbox = document.getElementById('plusOne');
+      const plusOneSection = document.getElementById('plusOneSection');
+      const plusOneNameInput = document.getElementById('plusOneName');
+
+      plusOneCheckbox.addEventListener('change', () => {
+        if (plusOneCheckbox.checked) {
+          plusOneSection.classList.remove('hidden');
+        } else {
+          plusOneSection.classList.add('hidden');
+          plusOneNameInput.value = '';
+        }
+      });
+    });
+
+    function syncImageHeight() {
+      const form = document.getElementById('rsvpForm');
+      const imageContainer = document.getElementById('rsvpImageContainer');
+      if (form && imageContainer) {
+        imageContainer.style.height = `${form.offsetHeight}px`;
+      }
+    }
+    window.addEventListener('load', syncImageHeight);
+    window.addEventListener('resize', syncImageHeight);
+  </script>
+</section>
+
+
+    </main>
+    <!-- Success/Error Modal -->
+    <div id="messageModal" class="modal pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div id="modalContent" class="relative max-w-sm rounded-lg bg-white p-6 text-center shadow-xl">
+            <p id="modalMessage" class="text-lg font-medium text-gray-800"></p>
+            <button id="closeModal" class="mt-4 rounded-full bg-theme-dark-olive px-6 py-2 text-white hover:bg-theme-light-olive">Close</button>
+        </div>
+    </div>
+
+
+    <script>
+// DOM references
+const rsvpForm = document.getElementById('rsvpForm');
+const fullNameInput = document.getElementById('fullName');
+const guestStatusMessage = document.getElementById('guestStatusMessage');
+const plusOneSection = document.getElementById('plusOneSection');
+const plusOneNameInput = document.getElementById('plusOneName');
+const submitButton = rsvpForm.querySelector('button[type="submit"]');
+
+// Modal refs (if you use a modal, or replace showModal with alert as fallback)
+const modal = document.getElementById('messageModal');
+const modalMessage = document.getElementById('modalMessage');
+const closeModalButton = document.getElementById('closeModal');
+
+// Helper function for status message below name input
+function setGuestStatus(text, style = 'text-gray-600') {
+    guestStatusMessage.textContent = text;
+    guestStatusMessage.className = `mt-2 text-sm ${style}`;
+}
+
+// Show/hide the plus one name section
+function showPlusOneNameField(show) {
+    if (show) {
+        plusOneSection.classList.remove('hidden');
+        plusOneNameInput.required = true;
+    } else {
+        plusOneSection.classList.add('hidden');
+        plusOneNameInput.required = false;
+        plusOneNameInput.value = '';
+    }
+}
+
+// Modal helpers (if you use modal)
+function showModal(message) {
+    modalMessage.textContent = message;
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+}
+function hideModal() {
+    modal.classList.add('opacity-0', 'pointer-events-none');
+}
+if (closeModalButton) {
+    closeModalButton.addEventListener('click', hideModal);
+}
+
+// RSVP validation state
+let guestFound = false;
+let guestPlusOnePermission = false;
+
+// Guest lookup on blur (case-insensitive, contains)
+fullNameInput.addEventListener('blur', async function() {
+    const enteredName = this.value.trim().toLowerCase();
+
+    // Reset state
+    guestFound = false;
+    guestPlusOnePermission = false;
+    showPlusOneNameField(false);
+    submitButton.disabled = true;
+    setGuestStatus("");
+
+    if (!enteredName) return;
+
+    // Get all guest names (for partial match logic)
+    const { data: guests, error } = await supabase
+        .from('guests')
+        .select('*');
+
+    if (error || !guests) {
+        setGuestStatus("Error checking the guest list. Please try again later.", 'text-red-600');
+        submitButton.disabled = true;
+        return;
+    }
+
+    // Find any guest where enteredName is a substring (case-insensitive)
+    const guest = guests.find(g => g.name && g.name.toLowerCase().includes(enteredName));
+
+    if (!guest) {
+        setGuestStatus("Not on the guest list.", 'text-red-600');
+        submitButton.disabled = true;
+        return;
+    }
+
+    guestFound = true;
+    guestPlusOnePermission = guest.plus_one === true;
+    submitButton.disabled = false;
+
+    if (guestPlusOnePermission) {
+        setGuestStatus("You have a plus one! Please provide their name.", 'text-green-600');
+        showPlusOneNameField(true);
+    } else {
+        setGuestStatus("You do not have a plus one for this event.", 'text-yellow-700');
+        showPlusOneNameField(false);
+    }
+});
+
+// Form submit handler
+rsvpForm.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    if (!guestFound) {
+        setGuestStatus("Sorry, you are not on the guest list! Please contact the couple for more info.", 'text-red-600');
+        submitButton.disabled = true;
+        return;
+    }
+    if (guestPlusOnePermission && !plusOneNameInput.value.trim()) {
+        setGuestStatus("Please provide your plus one's name.", 'text-red-600');
+        plusOneNameInput.focus();
+        return;
+    }
+    if (!guestPlusOnePermission) plusOneNameInput.value = '';
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submitting...';
+
+    // Prepare RSVP data
+    const formData = new FormData(rsvpForm);
+    const rsvpData = {
+        full_name: formData.get('fullName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        attending: formData.get('attendance') === 'Yes',
+        plus_one: guestPlusOnePermission,
+        plus_one_name: guestPlusOnePermission ? formData.get('plusOneName') : null,
+        song_request: formData.get('songRequest') || null
+    };
+
+    try {
+        const { error } = await supabase
+            .from('rsvps')
+            .insert([rsvpData]);
+        if (error) throw error;
+
+        showModal 
+          ? showModal('Thank you! Your RSVP has been submitted successfully.')
+          : alert('Thank you! Your RSVP has been submitted successfully.');
+        
+        rsvpForm.reset();
+        showPlusOneNameField(false);
+        setGuestStatus("");
+        guestFound = false; 
+        guestPlusOnePermission = false;
+    } catch (err) {
+        showModal 
+          ? showModal('An error occurred. Please try again later.')
+          : alert('An error occurred. Please try again later.');
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit RSVP';
+    }
+});
+    // Example: after looking up the guest
+if (guest.plus_one === true) {
+    // Show Plus One Name field
+    document.getElementById('plusOneSection').classList.remove('hidden');
+    document.getElementById('plusOneName').required = true;
+} else {
+    // Hide Plus One Name field, clear its value
+    document.getElementById('plusOneSection').classList.add('hidden');
+    document.getElementById('plusOneName').value = '';
+    document.getElementById('plusOneName').required = false;
+}
+
+</script>
+
+<script>
+  
+    // ... existing Supabase and form handling script ...
+
+    // Intersection Observer for fade-in effect
+    const faders = document.querySelectorAll('section'); // Select all sections
+
+    const appearOptions = {
+        threshold: 0.2, // When 20% of the section is visible
+        rootMargin: "0px 0px -7px 0px" // Adjust the bottom margin to control the fade trigger
+    };
+
+    const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                return;
+            } else {
+                entry.target.classList.add('fade-in');
+                appearOnScroll.unobserve(entry.target); // Stop observing once it's faded in
+            }
+        });
+    }, appearOptions);
+
+    faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+    });
+ function scrollCarousel(direction) {
+    const carousel = document.getElementById('carousel');
+    const width = carousel.offsetWidth;
+    carousel.scrollBy({ left: direction * width, behavior: 'smooth' });
+  }
+    const carousel = document.getElementById("carousel");
+  let scrollAmount = carousel.offsetWidth;
+  let currentIndex = 0;
+  const totalImages = carousel.children.length;
+
+  function scrollCarousel(direction) {
+    if (direction === 1 && currentIndex < totalImages - 1) {
+      currentIndex++;
+    } else if (direction === -1 && currentIndex > 0) {
+      currentIndex--;
+    } else if (direction === 1 && currentIndex === totalImages - 1) {
+      currentIndex = 0;
+    } else if (direction === -1 && currentIndex === 0) {
+      currentIndex = totalImages - 1;
+    }
+    carousel.scrollTo({ left: scrollAmount * currentIndex, behavior: 'smooth' });
+  }
+
+  // Auto-scroll every 7 seconds
+  setInterval(() => scrollCarousel(1), 7000);
+
+    const countdownDate = new Date("2025-12-05T00:00:00").getTime();
+
+  const updateCountdown = () => {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
+
+    if (distance <= 0) {
+      document.getElementById("countdown").innerHTML = "<h3 class='font-harlow text-3xl text-theme-dark-olive'>It's Wedding Day!</h3>";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = hours;
+    document.getElementById("minutes").textContent = minutes;
+    document.getElementById("seconds").textContent = seconds;
+  };
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

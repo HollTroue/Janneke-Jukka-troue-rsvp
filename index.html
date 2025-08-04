@@ -259,7 +259,8 @@ section:not(:first-child)::before {
 
           <nav class="container mx-auto px-2 py-3">
               <div class="flex justify-center items-center">
-                  <div class="flex space-x-2 md:space-x-4 text-xs md:text-sm text-theme-dark-olive font-sans">
+                 <div class="flex space-x-2 md:space-x-4 text-sm md:text-base text-theme-dark-olive font-sans">
+
 
                     <a href="#story" class="hover:text-theme-light-olive transition duration-300">Story</a>
                     <a href="#schedule" class="hover:text-theme-light-olive transition duration-300">Schedule</a>
@@ -458,29 +459,75 @@ section:not(:first-child)::before {
 </section>
 
 
-<section id="gifts"  class="relative py-2 md:py-2 bg-theme-off-white overflow-hidden">
+<section id="gifts" class="relative py-2 md:py-2 bg-theme-off-white overflow-hidden">
   <div class="container mx-auto px-2 relative z-10">
-    <div class="section-title-hat">
-      <img src="https://i.ibb.co/bMH7tvDS/title2.png" alt="Decorative hat" />
+    <!-- Title Section -->
+    <div class="section-title-hat flex flex-col items-center w-full mb-4">
+      <img 
+        src="https://i.ibb.co/bMH7tvDS/title2.png" 
+        alt="Decorative hat" 
+        class="mb-1 w-full max-w-xs h-auto"
+        style="object-fit:contain;" />
+      <h2 class="font-harlow text-6xl mb-6 text-center text-theme-dark-olive">Gifts</h2>
     </div>
-    <h2 class="font-harlow text-6xl mb-12 text-center text-theme-dark-olive">Gifts</h2>
-    <div class="max-w-3xl mx-auto text-center font-abadi text-lg text-theme-dark-olive space-y-7 leading-relaxed">
-      <p>
-        Your presence at our wedding is the greatest gift we could ask for. Should you wish to bless us with a present, we would be so grateful for a contribution towards our honeymoon fund or a special gift of your choice.
-      </p>
-      <p>
-        Banking details and registry information will be made available closer to the time.
-      </p>
+
+    <!-- Image & Text Row -->
+    <div class="flex flex-col md:flex-row items-center gap-0 max-w-4xl mx-auto">
+      <!-- Left: Image -->
+      <div class="w-full md:w-1/2 flex justify-center items-center p-4">
+        <img 
+           src="https://i.ibb.co/PGVGFS9X/olive3.png"
+    alt="Olive Watermark"
+          class="object-contain w-full h-auto md:h-[350px] max-h-[500px]  shadow-md" />
+      </div>
+      
+
+      <!-- Right: Text Content -->
+      <div class="w-full md:w-1/2 text-theme-dark-olive font-abadi text-lg space-y-6 leading-relaxed text-center md:text-left flex flex-col justify-center p-4">
+        <p>
+          Julle teenwoordigheid is vir ons genoeg,<br>
+          maar as julle graag iets wil gee,<br>
+          sal 'n bydrae tot ons toekoms opreg waardeer word.
+        </p>
+        <div class="fade-border-box bg-theme-off-white rounded-lg px-6 py-4 text-base shadow w-fit mx-auto md:mx-0">
+          <div class="font-bold mb-2">Bank Details</div>
+          <div><b>Bank:</b> Absa</div>
+          <div><b>Account Type:</b> Cheque account</div>
+          <div><b>Account Holder:</b> JP HOLL ABSA</div>
+          <div><b>Account Number:</b> 9068813351</div>
+        </div>
+      </div>
     </div>
+
+    <!-- Olive Watermark on Right -->
     <div class="absolute inset-y-0 right-0 flex items-center justify-end z-0 pointer-events-none" style="margin-right: -10%;">
       <img 
-        src="https://i.ibb.co/Zkrp55R/olive.png" 
-        alt="Watermark" 
-        class="w-[80%] opacity-10 object-contain" 
-      />
+        src="https://i.ibb.co/Zkrp55R/olive.png"
+        alt="Olive Watermark"
+        class="w-[80%] opacity-10 object-contain" />
     </div>
+
+    <!-- Decorative Bottom Fade -->
     <div class="fade-bottom"></div>
   </div>
+
+  <!-- CSS -->
+  <style>
+    .fade-bottom {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 24px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @media (min-width: 768px) {
+      #gifts .flex.md\\:flex-row > div {
+        height: 100%;
+      }
+    }
+  </style>
 </section>
 
 
@@ -530,15 +577,16 @@ section:not(:first-child)::before {
 </section>
 
 
-<section id="accommodation" class="py-8 md:py-8 bg-[#fdfcf9] relative overflow-hidden">
+<section id="accommodation" class="py-8 md:py-8 bg-white/70 relative overflow-hidden">
   <div class="container mx-auto px-2 md:px-8 relative z-10 flex flex-col items-center">
     <!-- Decorative Motif & Title -->
-    <img src="https://i.ibb.co/PzY3rTNH/title7.png" alt="Decorative Motif" class="h-12 md:h-16 w-auto mb-2" />
+   <img src="https://i.ibb.co/PzY3rTNH/title7.png" alt="Decorative Motif" class="h-24 md:h-27 w-auto mb-2" />
+
     <h2 class="font-harlow text-5xl md:text-7xl text-theme-dark-olive mb-2 text-center leading-tight tracking-tight">
       Accommodation
     </h2>
     <p class="text-theme-dark-olive text-base md:text-xl mb-8 text-center font-sans max-w-2xl">
-      Checkout these venues nearby the wedding venue and feel free to book if necessary.
+      Discover convenient lodging options close to our wedding location—reserve your stay if you wish
     </p>
     <div class="w-full flex flex-col md:flex-row items-stretch justify-center gap-8">
       <!-- Left: Illustration -->
@@ -787,7 +835,7 @@ window.addEventListener('DOMContentLoaded', () => {
           
         <form id="rsvpForm" class="relative space-y-6 font-sans bg-transparent z-10">
           <div>
-            <label for="fullName" class="block text-sm font-medium text-theme-dark-olive">Full Name(s)</label>
+            <label for="fullName" class="block text-sm font-medium text-theme-dark-olive">First Name</label>
             <input type="text" id="fullName" name="fullName" required
             class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
             <div id="guestStatusMessage" class="mt-2 text-sm"></div>
@@ -821,11 +869,7 @@ window.addEventListener('DOMContentLoaded', () => {
               class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive" />
           </div>
 
-          <!-- Plus One Checkbox -->
-<div id="plusOneSection" class="hidden">
-  <label for="plusOneName" class="block text-sm font-medium text-theme-dark-olive">Plus One Name:</label>
-  <input type="text" name="plusOneName" id="plusOneName" ... />
-</div>
+     
 
 
           <!-- Plus One Name Input -->
@@ -860,6 +904,7 @@ window.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
   </div>
+  
 
   <script>
     // Show/hide plus one name input based on checkbox
@@ -900,6 +945,23 @@ window.addEventListener('DOMContentLoaded', () => {
             <button id="closeModal" class="mt-4 rounded-full bg-theme-dark-olive px-6 py-2 text-white hover:bg-theme-light-olive">Close</button>
         </div>
     </div>
+    
+<footer>
+  <div class="max-w-md mx-auto mt-8 text-center">
+    <div class="font-harlow text-2xl md:text-3xl italic mb-2">Jukka & Janneke</div>
+    <a href="https://ibb.co/2780j3zn">
+      <img src="https://i.ibb.co/ns3qDMXg/j-j.jpg" alt="j-j" border="0" 
+        class="mx-auto max-h-[300px] object-cover" 
+        style="vertical-align: top; transform: translateY(2px);" />
+    </a>
+    <div class="bg-theme-off-white/80 text-theme-dark-olive text-center py-6 rounded-b-xl shadow-inner mt-[-1.5rem]">
+      <div class="mt-3 text-sm text-theme-light-olive">Est. 05 Jnauary 2006</div>
+    </div>
+  </div>
+</footer>
+
+
+
 
 
     <script>

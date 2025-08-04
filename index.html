@@ -17,8 +17,6 @@
   const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 </script>
-
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pinyon+Script&family=Times+New+Roman&family=Abadi+MT+Condensed+Light&display=swap" rel="stylesheet">
@@ -276,29 +274,18 @@ section:not(:first-child)::before {
             </div>
         </nav>
     </header>
-<section id="home" class="relative min-h-screen flex items-center justify-center text-white text-center overflow-hidden">
-
-  <!-- Single full background image -->
-  <div class="absolute inset-0">
+<section id="home" class="relative min-h-screen flex items-start justify-center text-white text-center overflow-hidden p-0 m-0">
+  <div class="absolute inset-0 p-0 m-0">
     <div 
-      class="w-full h-full bg-no-repeat bg-center bg-contain" 
+      class="w-full h-full bg-no-repeat bg-top bg-cover p-0 m-0"
       style="background-image: url('/images/cover_Final.png');">
     </div>
   </div>
-
-  <!-- Foreground content directly on image -->
-  <div class="relative z-10">
- <h1 class="font-signature text-7xl md:text-9xl lg:text-[10rem] leading-none text-white drop-shadow-xl">Jukka & Janneke</h1>
-<p class="font-times text-2xl md:text-3xl mt-4 text-white drop-shadow">05.12.2025</p>
-
+  <div class="relative z-10 flex flex-col items-center w-full mt-10">
+    <h1 class="font-signature text-7xl md:text-9xl lg:text-[10rem] leading-none text-white drop-shadow-xl mt-0 pt-0">Jukka & Janneke</h1>
+    <p class="font-times text-2xl md:text-3xl mt-4 text-white drop-shadow">05.12.2025</p>
   </div>
-
 </section>
-
-
-
-
-
 
 <!-- Our Story Section -->
 <section id="story" class="relative py-20 md:py-32 bg-theme-off-white overflow-hidden">
@@ -470,6 +457,32 @@ section:not(:first-child)::before {
   </div>
 </section>
 
+<section id="gifts" class="relative py-20 md:py-32 bg-theme-off-white overflow-hidden">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="section-title-hat">
+      <img src="../images/title2.png" alt="Decorative hat" />
+    </div>
+    <h2 class="font-harlow text-6xl mb-12 text-center text-theme-dark-olive">Gifts</h2>
+    <div class="max-w-3xl mx-auto text-center font-abadi text-lg text-theme-dark-olive space-y-7 leading-relaxed">
+      <p>
+        Your presence at our wedding is the greatest gift we could ask for. Should you wish to bless us with a present, we would be so grateful for a contribution towards our honeymoon fund or a special gift of your choice.
+      </p>
+      <p>
+        Banking details and registry information will be made available closer to the time.
+      </p>
+    </div>
+    <div class="absolute inset-y-0 right-0 flex items-center justify-end z-0 pointer-events-none" style="margin-right: -10%;">
+      <img 
+        src="../images/olive.png" 
+        alt="Watermark" 
+        class="w-[80%] opacity-10 object-contain" 
+      />
+    </div>
+    <div class="fade-bottom"></div>
+  </div>
+</section>
+
+
 
 <!-- Venue Section -->
 <section id="venue" class="relative py-20 md:py-32 bg-theme-off-white overflow-hidden">
@@ -508,7 +521,7 @@ section:not(:first-child)::before {
   <a href="https://www.google.com/maps/dir//721+Klippan+St,+Montana,+Pretoria,+0151,+South+Africa" 
      target="_blank" 
      rel="noopener" 
-     class="inline-block rounded-md px-5 py-2 bg-theme-olive text-white font-semibold shadow hover:bg-theme-dark-olive transition">
+     class="inline-block rounded-md px-5 py-2 bg-theme-olive text-olive-semibold shadow hover:bg-theme-dark-olive transition">
     Get directions
   </a>
 </div>

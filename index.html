@@ -397,7 +397,7 @@ section:not(:first-child)::before {
         </div>
       </div>
     </div>
-    <div id="countdown" class="mt-10 mb-14">
+   <div id="countdown" class="mt-10 mb-14">
   <h3 class="font-sans text-3xl text-theme-dark-olive mb-4">Countdown to the Wedding</h3>
   <div class="flex justify-center gap-8 text-theme-dark-olive font-harlow text-xl md:text-2xl">
     <div>
@@ -414,8 +414,11 @@ section:not(:first-child)::before {
     </div>
   </div>
 </div>
+
      <!-- Fade from #fdfcf9 to #CCC1B0 -->
 </section>
+
+
 
 
 
@@ -491,11 +494,9 @@ section:not(:first-child)::before {
     <h2 class="font-harlow text-5xl mb-12 text-center text-theme-dark-olive">The Venue</h2>
 
     <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-
       <div class="w-full md:w-1/2 relative">
   <img src="https://i.ibb.co/20ZdpwbZ/Venue.png" alt="Venue 1" class="rounded-lg shadow-2xl object-cover w-full max-h-[500px]" />
 </div>
-
 
       <!-- Details Section -->
       <div class="relative w-full md:w-1/2 space-y-8 z-10">
@@ -527,21 +528,7 @@ section:not(:first-child)::before {
     </div>
   </div>
 </section>
-<style>
-  
-  /* ... (your existing custom fonts and colors) ... */
 
-  /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .hide-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-</style>
 
 <section id="accommodation" class="py-8 md:py-8 bg-[#fdfcf9] relative overflow-hidden">
   <div class="container mx-auto px-2 md:px-8 relative z-10 flex flex-col items-center">
@@ -1126,18 +1113,18 @@ if (guest.plus_one === true) {
     }
     carousel.scrollTo({ left: scrollAmount * currentIndex, behavior: 'smooth' });
   }
-
-  // Auto-scroll every 7 seconds
-  setInterval(() => scrollCarousel(1), 7000);
-
-    const countdownDate = new Date("2025-12-05T00:00:00").getTime();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const countdownDate = new Date("2025-12-05T14:00:00").getTime();
 
   const updateCountdown = () => {
     const now = new Date().getTime();
     const distance = countdownDate - now;
 
     if (distance <= 0) {
-      document.getElementById("countdown").innerHTML = "<h3 class='font-harlow text-3xl text-theme-dark-olive'>It's Wedding Day!</h3>";
+      document.getElementById("countdown").innerHTML =
+        "<h3 class='font-harlow text-3xl text-theme-dark-olive'>It's Wedding Day!</h3>";
       return;
     }
 
@@ -1154,7 +1141,9 @@ if (guest.plus_one === true) {
 
   updateCountdown();
   setInterval(updateCountdown, 1000);
+});
 </script>
+
 
 </body>
 </html>

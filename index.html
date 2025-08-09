@@ -12,9 +12,9 @@
 
 <!-- Your custom Supabase logic -->
 <script>
-  const supabaseUrl = 'https://qrbvsyukjnkuucogistm.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYnZzeXVram5rdXVjb2dpc3RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNTE5MzYsImV4cCI6MjA2NTgyNzkzNn0.0jk8jyxmu-QIPHQaRMR19pkGHAHlAk2MZCAzHbwehb0';
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = 'https://qrbvsyukjnkuucogistm.supabase.co'; // (double check spelling!)
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYnZzeXVram5rdXVjb2dpc3RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNTE5MzYsImV4cCI6MjA2NTgyNzkzNn0.0jk8jyxmu-QIPHQaRMR19pkGHAHlAk2MZCAzHbwehb0';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -900,431 +900,349 @@ window.addEventListener('DOMContentLoaded', () => {
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <script>
-    // Modal refs
-    const modal = document.getElementById('messageModal');
-    const modalMessage = document.getElementById('modalMessage');
-    const closeModalButton = document.getElementById('closeModal');
 
-    function showModal(message) {
-      modalMessage.textContent = message;
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      modal.classList.add('opacity-100');
+
+  // Modal refs
+  const modal = document.getElementById('messageModal');
+  const modalMessage = document.getElementById('modalMessage');
+  const closeModalButton = document.getElementById('closeModal');
+
+  function showModal(message) {
+    modalMessage.textContent = message;
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100');
+  }
+
+  function hideModal() {
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    modal.classList.remove('opacity-100');
+  }
+
+  closeModalButton.addEventListener('click', hideModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) hideModal();
+  });
+
+  // Elements refs
+  const rsvpForm = document.getElementById('rsvpForm');
+  const firstNameInput = document.getElementById('firstName');
+  const surnameInput = document.getElementById('surname');
+  const guestStatusMessage = document.getElementById('guestStatusMessage');
+  const plusOneQuestionSection = document.getElementById('plusOneQuestionSection');
+  const plusOneYesRadio = document.getElementById('plusOneYes');
+  const plusOneNoRadio = document.getElementById('plusOneNo');
+  const plusOneSection = document.getElementById('plusOneSection');
+  const plusOneNameInput = document.getElementById('plusOneName');
+  const submitButton = rsvpForm.querySelector('button[type="submit"]');
+
+  const attendingYesRadio = document.getElementById('attendingYes');
+  const attendingNoRadio = document.getElementById('attendingNo');
+
+  const emailSection = document.getElementById('emailSection');
+  const phoneSection = document.getElementById('phoneSection');
+  const songRequestSection = document.getElementById('songRequestSection');
+
+  let guestList = [];
+  let approvedGuest = null;
+
+  // Normalize helpers (case-insensitive matching)
+  const norm = (s) => (s || '').trim().toLowerCase();
+  const firstLetter = (s) => (norm(s)[0] || '');
+
+  // UPDATED: Looser match - first name CONTAINS logic (case-insensitive), surname for context only
+  function findGuestMatch(inputFirstName, _inputSurname, guests) {
+    const f = norm(inputFirstName);
+    if (!f) return null;
+    // Match where either the guest list name contains typed name OR typed name contains guest list name
+    return guests.find(g => norm(g.name).includes(f) || f.includes(norm(g.name))) || null;
+  }
+
+  function showPlusOneNameField(show) {
+    if (show) {
+      plusOneSection.classList.remove('hidden');
+      plusOneNameInput.required = true;
+    } else {
+      plusOneSection.classList.add('hidden');
+      plusOneNameInput.value = '';
+      plusOneNameInput.required = false;
+    }
+  }
+
+  function updatePlusOneVisibility(guest) {
+    if (!guest || !guest.plus_one) {
+      plusOneQuestionSection.classList.add('hidden');
+      showPlusOneNameField(false);
+      plusOneYesRadio.checked = false;
+      plusOneNoRadio.checked = true;
+      plusOneYesRadio.disabled = true;
+      plusOneNoRadio.disabled = true;
+      return;
     }
 
-    function hideModal() {
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modal.classList.remove('opacity-100');
+    plusOneQuestionSection.classList.remove('hidden');
+    plusOneYesRadio.disabled = false;
+    plusOneNoRadio.disabled = false;
+
+    if (plusOneYesRadio.checked) {
+      showPlusOneNameField(true);
+    } else {
+      showPlusOneNameField(false);
     }
+  }
 
-    closeModalButton.addEventListener('click', hideModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) hideModal();
-    });
+  function setGuestStatus(text, colorClass = 'text-gray-600') {
+    guestStatusMessage.textContent = text;
+    guestStatusMessage.className = `mt-2 text-sm ${colorClass}`;
+  }
 
-    // Initialize Supabase client (replace with your credentials)
-    // const supabase = supabase.createClient('your-url', 'your-anon-key');
-
-    // Elements refs
-    const rsvpForm = document.getElementById('rsvpForm');
-    const firstNameInput = document.getElementById('firstName');
-    const surnameInput = document.getElementById('surname');
-    const guestStatusMessage = document.getElementById('guestStatusMessage');
-    const plusOneQuestionSection = document.getElementById('plusOneQuestionSection');
-    const plusOneYesRadio = document.getElementById('plusOneYes');
-    const plusOneNoRadio = document.getElementById('plusOneNo');
-    const plusOneSection = document.getElementById('plusOneSection');
-    const plusOneNameInput = document.getElementById('plusOneName');
-    const submitButton = rsvpForm.querySelector('button[type="submit"]');
-
-    const attendingYesRadio = document.getElementById('attendingYes');
-    const attendingNoRadio = document.getElementById('attendingNo');
-
-    const emailSection = document.getElementById('emailSection');
-    const phoneSection = document.getElementById('phoneSection');
-    const songRequestSection = document.getElementById('songRequestSection');
-
-    let guestList = [];
-    let approvedGuest = null;
-
-    // Normalize helpers (case-insensitive matching)
-    const norm = (s) => (s || '').trim().toLowerCase();
-    const firstLetter = (s) => (norm(s)[0] || '');
-
-    // MATCHING RULES (always match if correct, case-insensitive):
-    // 1) First name must match exactly after normalization.
-    // 2) Surname first letter must match the guest's surname first letter.
-    // This makes matching easy but still prevents false positives.
-    function findGuestMatch(inputFirstName, inputSurname, guests) {
-      const f = norm(inputFirstName);
-      const sInitial = firstLetter(inputSurname);
-      if (!f || !sInitial) return null;
-
-      // First, filter by first name exact (case-insensitive)
-      const sameFirst = guests.filter(g => norm(g.name) === f);
-      if (!sameFirst.length) return null;
-
-      // Then, first-letter-of-surname match
-      const byInitial = sameFirst.filter(g => firstLetter(g.lastname) === sInitial);
-      if (!byInitial.length) return null;
-
-      // If multiple, pick the first (they all satisfy the rule)
-      return byInitial[0];
-    }
-
-    function showPlusOneNameField(show) {
-      if (show) {
-        plusOneSection.classList.remove('hidden');
-        plusOneNameInput.required = true;
-      } else {
-        plusOneSection.classList.add('hidden');
-        plusOneNameInput.value = '';
-        plusOneNameInput.required = false;
-      }
-    }
-
-    function updatePlusOneVisibility(guest) {
-      if (!guest || !guest.plus_one) {
-        plusOneQuestionSection.classList.add('hidden');
-        showPlusOneNameField(false);
-        plusOneYesRadio.checked = false;
-        plusOneNoRadio.checked = true;
-        plusOneYesRadio.disabled = true;
-        plusOneNoRadio.disabled = true;
-        return;
-      }
-
-      plusOneQuestionSection.classList.remove('hidden');
-      plusOneYesRadio.disabled = false;
-      plusOneNoRadio.disabled = false;
-
-      if (plusOneYesRadio.checked) {
-        showPlusOneNameField(true);
-      } else {
-        showPlusOneNameField(false);
-      }
-    }
-
-    function setGuestStatus(text, colorClass = 'text-gray-600') {
-      guestStatusMessage.textContent = text;
-      guestStatusMessage.className = `mt-2 text-sm ${colorClass}`;
-    }
-
-    async function fetchGuestList() {
-      try {
-        const { data, error } = await supabase.from('guests').select('name, lastname, plus_one');
-        if (error) {
-          console.error('Error fetching guests:', error);
-          setGuestStatus('Kon nie gaste laai nie. Probeer weer later.', 'text-red-600');
-          submitButton.disabled = true;
-          return [];
-        }
-        return data || [];
-      } catch (err) {
-        console.error('Unexpected error fetching guests:', err);
-        setGuestStatus('Onverwagte fout. Probeer weer.', 'text-red-600');
+  async function fetchGuestList() {
+    try {
+      const { data, error } = await supabase.from('guests').select('name, lastname, plus_one');
+      if (error) {
+        console.error('Error fetching guests:', error);
+        setGuestStatus('Kon nie gaste laai nie. Probeer weer later.', 'text-red-600');
         submitButton.disabled = true;
         return [];
       }
+      return data || [];
+    } catch (err) {
+      console.error('Unexpected error fetching guests:', err);
+      setGuestStatus('Onverwagte fout. Probeer weer.', 'text-red-600');
+      submitButton.disabled = true;
+      return [];
+    }
+  }
+
+  async function validateGuest() {
+    const firstName = firstNameInput.value;
+    const surname = surnameInput.value; // context only
+
+    if (!firstName && !surname) {
+      setGuestStatus('');
+      approvedGuest = null;
+      submitButton.disabled = true;
+      updatePlusOneVisibility(null);
+      return false;
     }
 
-    async function validateGuest() {
-      const firstName = firstNameInput.value;
-      const surname = surnameInput.value;
-
-      if (!firstName && !surname) {
-        setGuestStatus('');
-        approvedGuest = null;
-        submitButton.disabled = true;
-        updatePlusOneVisibility(null);
-        return false;
-      }
-
-      if (!firstName || !surname) {
-        setGuestStatus('Tik jou naam en die eerste letter van jou van.', 'text-yellow-700');
-        approvedGuest = null;
-        submitButton.disabled = true;
-        updatePlusOneVisibility(null);
-        return false;
-      }
-
-      const match = findGuestMatch(firstName, surname, guestList);
-
-      if (!match) {
-        setGuestStatus('Naam/van nie gevind nie. Kontroleer spelling.', 'text-red-600');
-        approvedGuest = null;
-        submitButton.disabled = true;
-        updatePlusOneVisibility(null);
-        return false;
-      }
-
-      approvedGuest = match;
-      setGuestStatus('Gevind! Jy is op die gaste lys.', 'text-green-600');
-      submitButton.disabled = false;
-      updatePlusOneVisibility(approvedGuest);
-      return true;
+    if (!firstName) {
+      setGuestStatus('Tik jou naam (Eerste Naam).', 'text-yellow-700');
+      approvedGuest = null;
+      submitButton.disabled = true;
+      updatePlusOneVisibility(null);
+      return false;
     }
 
-    function debounce(fn, delay = 250) {
-      let t;
-      return (...args) => {
-        clearTimeout(t);
-        t = setTimeout(() => fn.apply(null, args), delay);
-      };
+    const match = findGuestMatch(firstName, surname, guestList);
+
+    if (!match) {
+      setGuestStatus('Jy is nie op die gaste lys nie. Kontroleer jou naam.', 'text-red-600');
+      approvedGuest = null;
+      submitButton.disabled = true;
+      updatePlusOneVisibility(null);
+      return false;
     }
 
-    function updateAttendanceDependentFields(isAttending) {
-      if (isAttending) {
-        emailSection.style.display = 'block';
-        phoneSection.style.display = 'block';
-        songRequestSection.style.display = 'block';
+    approvedGuest = match;
+    setGuestStatus('Welkom! Jy is op die gaste lys.', 'text-green-600');
+    submitButton.disabled = false;
+    updatePlusOneVisibility(approvedGuest);
+    return true;
+  }
 
-        if (approvedGuest && approvedGuest.plus_one) {
-          plusOneQuestionSection.style.display = 'block';
-          plusOneYesRadio.disabled = false;
-          plusOneNoRadio.disabled = false;
+  function debounce(fn, delay = 250) {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(null, args), delay);
+    };
+  }
 
-          if (plusOneYesRadio.checked) {
-            plusOneSection.style.display = 'block';
-            plusOneNameInput.required = true;
-          } else {
-            plusOneSection.style.display = 'none';
-            plusOneNameInput.value = '';
-            plusOneNameInput.required = false;
-          }
+  function updateAttendanceDependentFields(isAttending) {
+    if (isAttending) {
+      emailSection.style.display = 'block';
+      phoneSection.style.display = 'block';
+      songRequestSection.style.display = 'block';
+
+      if (approvedGuest && approvedGuest.plus_one) {
+        plusOneQuestionSection.style.display = 'block';
+        plusOneYesRadio.disabled = false;
+        plusOneNoRadio.disabled = false;
+
+        if (plusOneYesRadio.checked) {
+          plusOneSection.style.display = 'block';
+          plusOneNameInput.required = true;
         } else {
-          plusOneQuestionSection.style.display = 'none';
           plusOneSection.style.display = 'none';
           plusOneNameInput.value = '';
           plusOneNameInput.required = false;
-          plusOneYesRadio.disabled = true;
-          plusOneNoRadio.disabled = true;
         }
-
-        submitButton.textContent = 'Submit RSVP';
       } else {
-        emailSection.style.display = 'none';
-        phoneSection.style.display = 'none';
         plusOneQuestionSection.style.display = 'none';
         plusOneSection.style.display = 'none';
         plusOneNameInput.value = '';
         plusOneNameInput.required = false;
-        songRequestSection.style.display = 'none';
         plusOneYesRadio.disabled = true;
         plusOneNoRadio.disabled = true;
-
-        submitButton.textContent = 'Send RSVP';
       }
+
+      submitButton.textContent = 'Submit RSVP';
+    } else {
+      emailSection.style.display = 'none';
+      phoneSection.style.display = 'none';
+      plusOneQuestionSection.style.display = 'none';
+      plusOneSection.style.display = 'none';
+      plusOneNameInput.value = '';
+      plusOneNameInput.required = false;
+      songRequestSection.style.display = 'none';
+      plusOneYesRadio.disabled = true;
+      plusOneNoRadio.disabled = true;
+
+      submitButton.textContent = 'Send RSVP';
+    }
+  }
+
+  function handleAttendanceChange() {
+    const isAttending = attendingYesRadio.checked;
+    updateAttendanceDependentFields(isAttending);
+  }
+
+  function handlePlusOneChange() {
+    if (plusOneYesRadio.checked) {
+      plusOneSection.style.display = 'block';
+      plusOneNameInput.required = true;
+    } else {
+      plusOneSection.style.display = 'none';
+      plusOneNameInput.value = '';
+      plusOneNameInput.required = false;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    guestList = await fetchGuestList();
+    submitButton.disabled = true;
+
+    const debouncedValidate = debounce(validateGuest);
+    firstNameInput.addEventListener('input', debouncedValidate);
+    surnameInput.addEventListener('input', debouncedValidate);
+
+    plusOneYesRadio.addEventListener('change', handlePlusOneChange);
+    plusOneNoRadio.addEventListener('change', handlePlusOneChange);
+
+    attendingYesRadio.addEventListener('change', handleAttendanceChange);
+    attendingNoRadio.addEventListener('change', handleAttendanceChange);
+
+    [firstNameInput, surnameInput].forEach((input) => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') e.preventDefault();
+      });
+    });
+
+    handleAttendanceChange();
+  });
+
+rsvpForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  if (!approvedGuest) {
+    setGuestStatus('Jy is nie op die gaste lys nie. Kontroleer jou naam.', 'text-red-600');
+    submitButton.disabled = true;
+    return;
+  }
+
+  const isAttending = attendingYesRadio.checked;
+
+  if (
+    isAttending &&
+    approvedGuest.plus_one &&
+    plusOneYesRadio.checked &&
+    (plusOneNameInput.value || '').trim() === ''
+  ) {
+    setGuestStatus('Tik asb. jou metgesel se naam.', 'text-red-600');
+    plusOneNameInput.focus();
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Submitting...';
+
+  try {
+    const formData = new FormData(rsvpForm);
+
+    const rsvpData = {
+      full_name: (formData.get('firstName') || '').trim(),
+      lastname: (formData.get('surname') || '').trim(),
+      email: (formData.get('email') || '').trim(),
+      phone: (formData.get('phone') || '').trim(),
+      attending: isAttending,
+      plus_one: approvedGuest.plus_one,
+      plus_one_name:
+        isAttending && approvedGuest.plus_one && plusOneYesRadio.checked
+          ? (formData.get('plusOneName') || '').trim()
+          : null,
+      song_request: (formData.get('songRequest') || '').trim(),
+    };
+
+    const { error } = await supabase.from('rsvps').insert([rsvpData]);
+    if (error) throw error;
+
+    // ✅ Status label for above form
+    if (!isAttending) {
+      setGuestStatus('Dankie vir jou RSVP', 'text-green-600');
+      submitButton.textContent = 'Dankie vir jou RSVP!';
+    } else {
+      setGuestStatus('Dankie! Jou RSVP is ontvang.', 'text-green-600');
+      submitButton.textContent = 'Dankie! Jou RSVP is ontvang!';
     }
 
-    function handleAttendanceChange() {
-      const isAttending = attendingYesRadio.checked;
-      updateAttendanceDependentFields(isAttending);
-    }
+    // Reset form and disable
+    rsvpForm.reset();
+    approvedGuest = null;
+    updateAttendanceDependentFields(true);
+    submitButton.disabled = true;
 
-    function handlePlusOneChange() {
-      if (plusOneYesRadio.checked) {
-        plusOneSection.style.display = 'block';
-        plusOneNameInput.required = true;
+    // ✅ Update slideshow heading dynamically
+    const thankYouTitle = document.getElementById('slideshow-thankyou');
+    if (thankYouTitle) {
+      if (!isAttending) {
+        thankYouTitle.textContent = 'Dankie vir jou RSVP!';
       } else {
-        plusOneSection.style.display = 'none';
-        plusOneNameInput.value = '';
-        plusOneNameInput.required = false;
+        thankYouTitle.textContent = 'Jou naam is gelys!';
       }
+      thankYouTitle.classList.remove('hidden');
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      guestList = await fetchGuestList();
-      submitButton.disabled = true;
-
-      const debouncedValidate = debounce(validateGuest);
-      firstNameInput.addEventListener('input', debouncedValidate);
-      surnameInput.addEventListener('input', debouncedValidate);
-
-      plusOneYesRadio.addEventListener('change', handlePlusOneChange);
-      plusOneNoRadio.addEventListener('change', handlePlusOneChange);
-
-      attendingYesRadio.addEventListener('change', handleAttendanceChange);
-      attendingNoRadio.addEventListener('change', handleAttendanceChange);
-
-      [firstNameInput, surnameInput].forEach((input) => {
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') e.preventDefault();
-        });
-      });
-
-      handleAttendanceChange();
-    });
-
-    rsvpForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      if (!approvedGuest) {
-        setGuestStatus('Naam/van nie gevind nie. Kontroleer spelling.', 'text-red-600');
-        submitButton.disabled = true;
-        return;
-      }
-
-      const isAttending = attendingYesRadio.checked;
-
-      if (
-        isAttending &&
-        approvedGuest.plus_one &&
-        plusOneYesRadio.checked &&
-        plusOneNameInput.value.trim() === ''
-      ) {
-        setGuestStatus('Tik asb. jou metgesel se naam.', 'text-red-600');
-        plusOneNameInput.focus();
-        return;
-      }
-
-      submitButton.disabled = true;
-      submitButton.textContent = 'Submitting...';
-
-      try {
-        const formData = new FormData(rsvpForm);
-
-        const rsvpData = {
-          full_name: formData.get('firstName').trim(),
-          lastname: formData.get('surname').trim(),
-          email: isAttending ? formData.get('email').trim() : null,
-          phone: isAttending ? (formData.get('phone') || '').trim() || null : null,
-          attending: isAttending,
-          plus_one: approvedGuest.plus_one,
-          plus_one_name:
-            isAttending && approvedGuest.plus_one && plusOneYesRadio.checked
-              ? formData.get('plusOneName').trim()
-              : null,
-          song_request: isAttending ? (formData.get('songRequest') || '').trim() || null : null,
-        };
-
-        // Submit to Supabase (uncomment when keys are set)
-        // const { error } = await supabase.from('rsvps').insert([rsvpData]);
-        // if (error) throw error;
-
-        // Simulate success if Supabase not configured:
-        // REMOVE the next line when you enable real Supabase:
-        await new Promise(res => setTimeout(res, 400));
-
-        setGuestStatus('Dankie! Jou RSVP is ontvang.', 'text-green-600');
-        submitButton.textContent = 'Dankie vir jou RSVP!';
-        rsvpForm.reset();
-        approvedGuest = null;
-        updateAttendanceDependentFields(true);
-        submitButton.disabled = true;
-
-        // Reveal the Thank You title and scroll to slideshow
-        const thankYouTitle = document.getElementById('slideshow-thankyou');
-        if (thankYouTitle) thankYouTitle.classList.remove('hidden');
-        const slideshowSection = document.getElementById('slideshow');
-        if (slideshowSection) {
-          setTimeout(() => {
-            slideshowSection.scrollIntoView({ behavior: 'smooth' });
-          }, 300);
-        }
-      } catch (err) {
-        console.error('Error submitting RSVP:', err);
-        setGuestStatus('Kon nie indien nie. Probeer asseblief weer.', 'text-red-600');
-        submitButton.disabled = false;
-        submitButton.textContent = isAttending ? 'Submit RSVP' : 'Send RSVP';
-      }
-    });
-  </script>
-</section>
-
-<!-- Slideshow (cropped height, full-bleed images, arrows visible) -->
-<section id="slideshow" class="py-12 bg-theme-off-white">
-  <div class="container mx-auto px-4">
-    <!-- Heading (hidden until successful RSVP) -->
-    <h1 id="slideshow-thankyou" class="hidden text-center font-harlow text-theme-dark-olive text-3xl md:text-4xl mb-6">
-      Thank You For Submitting!
-    </h1>
-
-    <div class="relative w-full max-w-md sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto overflow-hidden rounded-2xl shadow-lg bg-black">
-      <div id="slideshow-frame" class="relative w-full h-[70vh] max-h-[800px] min-h-[420px]">
-        <div id="slideshow-images" class="absolute inset-0 w-full h-full">
-               <img src="images/1.jpg" alt="Slide 5"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-          <img src="images/2.jpg" alt="Slide 6"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-          <img src="images/3.jpg" alt="Slide 7"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-          <img src="images/slideshow.jpg" alt="Slide 1"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-          <img src="images/slideshow_3.jpg" alt="Slide 2"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-          <img src="images/slideshow_4.jpg" alt="Slide 3"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-          <img src="images/slideshow_5.jpg" alt="Slide 4"
-               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
-     
-         
-        </div>
-
-        <!-- Arrows -->
-        <button id="prev-slide"
-                class="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 z-20 bg-theme-dark-olive/70 text-white px-2 py-1 md:px-3 md:py-2 rounded-full hover:bg-theme-dark-olive/90 focus:outline-none focus:ring">
-          &#10094;
-        </button>
-        <button id="next-slide"
-                class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 z-20 bg-theme-dark-olive/70 text-white px-2 py-1 md:px-3 md:py-2 rounded-full hover:bg-theme-dark-olive/90 focus:outline-none focus:ring">
-          &#10095;
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script>
-  (function initCroppedHeightSlideshow() {
-    const slides = document.querySelectorAll('#slideshow-images img');
-    const prevBtn = document.getElementById('prev-slide');
-    const nextBtn = document.getElementById('next-slide');
-    if (!slides.length || !prevBtn || !nextBtn) return;
-
-    let currentIndex = 0;
-    const intervalMs = 7000; // auto every 7s
-    let timerId;
-
-    function render(index) {
-      slides.forEach((slide, i) => {
-        slide.style.opacity = i === index ? '1' : '0';
-        slide.style.zIndex = i === index ? '1' : '0';
-        slide.style.pointerEvents = i === index ? 'auto' : 'none';
-      });
-      currentIndex = index;
+    // Scroll to slideshow
+    const slideshowSection = document.getElementById('slideshow');
+    if (slideshowSection) {
+      setTimeout(() => {
+        slideshowSection.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     }
+  } catch (err) {
+    console.error('Error submitting RSVP:', err);
+    setGuestStatus('Kon nie indien nie. Probeer asseblief weer.', 'text-red-600');
+    submitButton.disabled = false;
+    submitButton.textContent = isAttending ? 'Submit RSVP' : 'Send RSVP';
+  }
+});
 
-    function next() {
-      render((currentIndex + 1) % slides.length);
-    }
-
-    function prev() {
-      render((currentIndex - 1 + slides.length) % slides.length);
-    }
-
-    function resetTimer() {
-      clearInterval(timerId);
-      timerId = setInterval(next, intervalMs);
-    }
-
-    // Initialize
-    render(0);
-    timerId = setInterval(next, intervalMs);
-
-    // Controls
-    prevBtn.addEventListener('click', () => { prev(); resetTimer(); });
-    nextBtn.addEventListener('click', () => { next(); resetTimer(); });
-  })();
 </script>
+
+</section>
+
 
 
 <!-- Cropped-height slideshow (fills frame using object-cover) -->
 <section id="slideshow" class="py-12 bg-theme-off-white">
   <div class="container mx-auto px-4">
     <!-- Heading (hidden until successful RSVP) -->
-    <h1 id="slideshow-thankyou" class="hidden text-center font-harlow text-theme-dark-olive text-3xl md:text-4xl mb-6">
-      Thank You For Submitting!
-    </h1>
+    
+    <h1 id="slideshow-thankyou"
+    class="hidden text-center font-harlow text-theme-dark-olive text-3xl md:text-4xl mb-6">
+    Jou naam is gelys!
+</h1>
+
 
     <!-- Slideshow Container (fixed height; images fill and crop as needed) -->
     <div class="relative w-full max-w-md sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto overflow-hidden rounded-2xl shadow-lg bg-black">

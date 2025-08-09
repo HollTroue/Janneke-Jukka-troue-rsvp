@@ -449,7 +449,7 @@ section:not(:first-child)::before {
       <!-- Watermark Image -->
       <div class="absolute right-10 top-1/2 transform -translate-y-1/2 z-0 pointer-events-none hidden md:block">
         <img 
-          src="Janneke-Jukka-troue-rsvp/images/olive5.png" 
+          src="images/olive5.png" 
           alt="Watermark" 
           class="w-full opacity-10 object-contain"
         />
@@ -1364,28 +1364,7 @@ rsvpForm.addEventListener('submit', async (event) => {
     faders.forEach(fader => {
         appearOnScroll.observe(fader);
     });
- function scrollCarousel(direction) {
-    const carousel = document.getElementById('carousel');
-    const width = carousel.offsetWidth;
-    carousel.scrollBy({ left: direction * width, behavior: 'smooth' });
-  }
-    const carousel = document.getElementById("carousel");
-  let scrollAmount = carousel.offsetWidth;
-  let currentIndex = 0;
-  const totalImages = carousel.children.length;
 
-  function scrollCarousel(direction) {
-    if (direction === 1 && currentIndex < totalImages - 1) {
-      currentIndex++;
-    } else if (direction === -1 && currentIndex > 0) {
-      currentIndex--;
-    } else if (direction === 1 && currentIndex === totalImages - 1) {
-      currentIndex = 0;
-    } else if (direction === -1 && currentIndex === 0) {
-      currentIndex = totalImages - 1;
-    }
-    carousel.scrollTo({ left: scrollAmount * currentIndex, behavior: 'smooth' });
-  }
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {

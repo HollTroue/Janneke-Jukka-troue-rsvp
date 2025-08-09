@@ -760,41 +760,7 @@ section:not(:first-child)::before {
 </script>
 
 <!-- JavaScript for manual slideshow -->
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-  const slidesContainer = document.getElementById('slides');
-  const slides = slidesContainer.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  let currentIndex = 0;
 
-  function showSlide(idx) {
-    slides.forEach((slide, i) => {
-      slide.style.opacity = i === idx ? '1' : '0';
-      slide.style.position = i === idx ? 'relative' : 'absolute';
-      slide.style.zIndex = i === idx ? 2 : 1;
-      slide.style.pointerEvents = i === idx ? 'auto' : 'none';
-    });
-    currentIndex = idx;
-    setArrowHandlers();
-  }
-
-  function setArrowHandlers() {
-    slides.forEach((slide) => {
-      const prevBtn = slide.querySelector('#prevSlide');
-      const nextBtn = slide.querySelector('#nextSlide');
-      if (prevBtn) prevBtn.onclick = null;
-      if (nextBtn) nextBtn.onclick = null;
-    });
-    const currentSlide = slides[currentIndex];
-    const prevBtn = currentSlide.querySelector('#prevSlide');
-    const nextBtn = currentSlide.querySelector('#nextSlide');
-    if (prevBtn) prevBtn.onclick = () => showSlide((currentIndex - 1 + totalSlides) % totalSlides);
-    if (nextBtn) nextBtn.onclick = () => showSlide((currentIndex + 1) % totalSlides);
-  }
-
-  showSlide(0);
-});
-</script>
 
 
 <section id="rsvp" class="py-8 md:py-8 bg-theme-off-white">

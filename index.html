@@ -582,7 +582,7 @@ section:not(:first-child)::before {
 <section id="accommodation" class="py-20 md:py-32 bg-[#fdfcf9] relative overflow-hidden">
   <div class="container mx-auto px-2 md:px-8 relative z-10 flex flex-col items-center">
     <!-- Decorative Motif & Title -->
-    <img src="../images/title7.png" alt="Decorative Motif" class="h-12 md:h-16 w-auto mb-2" />
+    <img src="/images/title7.png" alt="Decorative Motif" class="h-12 md:h-16 w-auto mb-2" />
     <h2 class="font-harlow text-5xl md:text-7xl text-theme-dark-olive mb-2 text-center leading-tight tracking-tight">
       Accommodation
     </h2>
@@ -593,7 +593,7 @@ section:not(:first-child)::before {
     <div class="w-full flex flex-col md:flex-row items-stretch justify-center gap-8">
       <!-- Left: Illustration -->
       <div class="w-full md:w-1/2 flex items-stretch justify-center md:justify-end">
-        <img src="../images/Accomodation.jpg"
+        <img src="/images/Accomodation.jpg"
              alt="Accommodation Illustration"
              class="w-full h-[350px] md:w-[95%] md:h-[500px] lg:h-[600px] rounded-2xl object-cover"
              style="border:none;box-shadow:none;" />
@@ -899,9 +899,7 @@ window.addEventListener('DOMContentLoaded', () => {
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-  <script>
-
-
+<script>
   // Modal refs
   const modal = document.getElementById('messageModal');
   const modalMessage = document.getElementById('modalMessage');
@@ -912,7 +910,6 @@ window.addEventListener('DOMContentLoaded', () => {
     modal.classList.remove('opacity-0', 'pointer-events-none');
     modal.classList.add('opacity-100');
   }
-
   function hideModal() {
     modal.classList.add('opacity-0', 'pointer-events-none');
     modal.classList.remove('opacity-100');
@@ -945,16 +942,14 @@ window.addEventListener('DOMContentLoaded', () => {
   let guestList = [];
   let approvedGuest = null;
 
-  // Normalize helpers (case-insensitive matching)
+  // Helpers
   const norm = (s) => (s || '').trim().toLowerCase();
-  const firstLetter = (s) => (norm(s)[0] || '');
 
-  // UPDATED: Looser match - first name CONTAINS logic (case-insensitive), surname for context only
+  // ✅ Exact first name match (case-insensitive)
   function findGuestMatch(inputFirstName, _inputSurname, guests) {
     const f = norm(inputFirstName);
     if (!f) return null;
-    // Match where either the guest list name contains typed name OR typed name contains guest list name
-    return guests.find(g => norm(g.name).includes(f) || f.includes(norm(g.name))) || null;
+    return guests.find(g => norm(g.name) === f) || null;
   }
 
   function showPlusOneNameField(show) {
@@ -965,28 +960,6 @@ window.addEventListener('DOMContentLoaded', () => {
       plusOneSection.classList.add('hidden');
       plusOneNameInput.value = '';
       plusOneNameInput.required = false;
-    }
-  }
-
-  function updatePlusOneVisibility(guest) {
-    if (!guest || !guest.plus_one) {
-      plusOneQuestionSection.classList.add('hidden');
-      showPlusOneNameField(false);
-      plusOneYesRadio.checked = false;
-      plusOneNoRadio.checked = true;
-      plusOneYesRadio.disabled = true;
-      plusOneNoRadio.disabled = true;
-      return;
-    }
-
-    plusOneQuestionSection.classList.remove('hidden');
-    plusOneYesRadio.disabled = false;
-    plusOneNoRadio.disabled = false;
-
-    if (plusOneYesRadio.checked) {
-      showPlusOneNameField(true);
-    } else {
-      showPlusOneNameField(false);
     }
   }
 
@@ -1013,15 +986,17 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ✅ Validate guest and instantly show/hide plus one UI
   async function validateGuest() {
     const firstName = firstNameInput.value;
-    const surname = surnameInput.value; // context only
+    const surname = surnameInput.value;
 
     if (!firstName && !surname) {
       setGuestStatus('');
       approvedGuest = null;
       submitButton.disabled = true;
-      updatePlusOneVisibility(null);
+      plusOneQuestionSection.classList.add('hidden');
+      showPlusOneNameField(false);
       return false;
     }
 
@@ -1029,24 +1004,39 @@ window.addEventListener('DOMContentLoaded', () => {
       setGuestStatus('Tik jou naam (Eerste Naam).', 'text-yellow-700');
       approvedGuest = null;
       submitButton.disabled = true;
-      updatePlusOneVisibility(null);
+      plusOneQuestionSection.classList.add('hidden');
+      showPlusOneNameField(false);
       return false;
     }
 
     const match = findGuestMatch(firstName, surname, guestList);
 
     if (!match) {
-      setGuestStatus('Jy is nie op die gaste lys nie. Kontroleer jou naam.', 'text-red-600');
+      setGuestStatus('Nie gevind nie. Asseblief maak seker jou naam is reg gespel.', 'text-red-600');
       approvedGuest = null;
       submitButton.disabled = true;
-      updatePlusOneVisibility(null);
+      plusOneQuestionSection.classList.add('hidden');
+      showPlusOneNameField(false);
       return false;
     }
 
     approvedGuest = match;
     setGuestStatus('Welkom! Jy is op die gaste lys.', 'text-green-600');
     submitButton.disabled = false;
-    updatePlusOneVisibility(approvedGuest);
+
+    // Show or hide plus-one fields right now
+    if (approvedGuest.plus_one) {
+      plusOneQuestionSection.classList.remove('hidden');
+      plusOneYesRadio.disabled = false;
+      plusOneNoRadio.disabled = false;
+    } else {
+      plusOneQuestionSection.classList.add('hidden');
+      plusOneYesRadio.disabled = true;
+      plusOneNoRadio.disabled = true;
+      plusOneYesRadio.checked = false;
+      plusOneNoRadio.checked = true;
+      showPlusOneNameField(false);
+    }
     return true;
   }
 
@@ -1063,42 +1053,10 @@ window.addEventListener('DOMContentLoaded', () => {
       emailSection.style.display = 'block';
       phoneSection.style.display = 'block';
       songRequestSection.style.display = 'block';
-
-      if (approvedGuest && approvedGuest.plus_one) {
-        plusOneQuestionSection.style.display = 'block';
-        plusOneYesRadio.disabled = false;
-        plusOneNoRadio.disabled = false;
-
-        if (plusOneYesRadio.checked) {
-          plusOneSection.style.display = 'block';
-          plusOneNameInput.required = true;
-        } else {
-          plusOneSection.style.display = 'none';
-          plusOneNameInput.value = '';
-          plusOneNameInput.required = false;
-        }
-      } else {
-        plusOneQuestionSection.style.display = 'none';
-        plusOneSection.style.display = 'none';
-        plusOneNameInput.value = '';
-        plusOneNameInput.required = false;
-        plusOneYesRadio.disabled = true;
-        plusOneNoRadio.disabled = true;
-      }
-
-      submitButton.textContent = 'Submit RSVP';
     } else {
       emailSection.style.display = 'none';
       phoneSection.style.display = 'none';
-      plusOneQuestionSection.style.display = 'none';
-      plusOneSection.style.display = 'none';
-      plusOneNameInput.value = '';
-      plusOneNameInput.required = false;
       songRequestSection.style.display = 'none';
-      plusOneYesRadio.disabled = true;
-      plusOneNoRadio.disabled = true;
-
-      submitButton.textContent = 'Send RSVP';
     }
   }
 
@@ -1109,10 +1067,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function handlePlusOneChange() {
     if (plusOneYesRadio.checked) {
-      plusOneSection.style.display = 'block';
+      plusOneSection.classList.remove('hidden');
       plusOneNameInput.required = true;
     } else {
-      plusOneSection.style.display = 'none';
+      plusOneSection.classList.add('hidden');
       plusOneNameInput.value = '';
       plusOneNameInput.required = false;
     }
@@ -1141,12 +1099,13 @@ window.addEventListener('DOMContentLoaded', () => {
     handleAttendanceChange();
   });
 
-rsvpForm.addEventListener('submit', async (event) => {
+ rsvpForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   if (!approvedGuest) {
     setGuestStatus('Jy is nie op die gaste lys nie. Kontroleer jou naam.', 'text-red-600');
-    submitButton.disabled = true;
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit RSVP';
     return;
   }
 
@@ -1160,6 +1119,8 @@ rsvpForm.addEventListener('submit', async (event) => {
   ) {
     setGuestStatus('Tik asb. jou metgesel se naam.', 'text-red-600');
     plusOneNameInput.focus();
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit RSVP';
     return;
   }
 
@@ -1186,33 +1147,27 @@ rsvpForm.addEventListener('submit', async (event) => {
     const { error } = await supabase.from('rsvps').insert([rsvpData]);
     if (error) throw error;
 
-    // ✅ Status label for above form
+    // Dynamic label
     if (!isAttending) {
       setGuestStatus('Dankie vir jou RSVP', 'text-green-600');
       submitButton.textContent = 'Dankie vir jou RSVP!';
     } else {
       setGuestStatus('Dankie! Jou RSVP is ontvang.', 'text-green-600');
-      submitButton.textContent = 'Dankie! Jou RSVP is ontvang!';
+      submitButton.textContent = 'Stuur nog n RSVP?';
     }
 
-    // Reset form and disable
     rsvpForm.reset();
     approvedGuest = null;
-    updateAttendanceDependentFields(true);
     submitButton.disabled = true;
+    updateAttendanceDependentFields(true);
 
-    // ✅ Update slideshow heading dynamically
+    // Dynamically update thank-you heading
     const thankYouTitle = document.getElementById('slideshow-thankyou');
     if (thankYouTitle) {
-      if (!isAttending) {
-        thankYouTitle.textContent = 'Dankie vir jou RSVP!';
-      } else {
-        thankYouTitle.textContent = 'Jou naam is gelys!';
-      }
+      thankYouTitle.textContent = !isAttending ? 'Dankie vir jou RSVP!' : 'Jou naam is gelys!';
       thankYouTitle.classList.remove('hidden');
     }
 
-    // Scroll to slideshow
     const slideshowSection = document.getElementById('slideshow');
     if (slideshowSection) {
       setTimeout(() => {
@@ -1228,6 +1183,7 @@ rsvpForm.addEventListener('submit', async (event) => {
 });
 
 </script>
+
 
 </section>
 

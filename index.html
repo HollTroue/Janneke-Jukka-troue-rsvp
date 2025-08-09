@@ -717,7 +717,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start">
       <div class="relative w-full max-w-md mx-auto">
-
         <!-- Watermark behind the form -->
         <img
           src="https://i.ibb.co/KjnNgd49/watermark2.png"
@@ -735,7 +734,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 type="text"
                 id="firstName"
                 name="firstName"
-                placeholder="Chris";
+                placeholder="Chris"
                 required
                 class="mt-1 block w-full px-4 py-2 bg-white border border-theme-khaki rounded-md shadow-sm focus:ring-theme-light-olive focus:border-theme-light-olive"
                 aria-describedby="guestStatusMessage"
@@ -922,7 +921,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (e.target === modal) hideModal();
     });
 
-    // Initialize Supabase client here (replace with your credentials)
+    // Initialize Supabase client (replace with your credentials)
     // const supabase = supabase.createClient('your-url', 'your-anon-key');
 
     // Elements refs
@@ -945,30 +944,33 @@ window.addEventListener('DOMContentLoaded', () => {
     const songRequestSection = document.getElementById('songRequestSection');
 
     let guestList = [];
-    let currentGuest = null;
+    let approvedGuest = null;
 
-    // Normalize string for comparison
-    function normalize(str) {
-      return (str || '').trim().toLowerCase();
+    // Normalize helpers (case-insensitive matching)
+    const norm = (s) => (s || '').trim().toLowerCase();
+    const firstLetter = (s) => (norm(s)[0] || '');
+
+    // MATCHING RULES (always match if correct, case-insensitive):
+    // 1) First name must match exactly after normalization.
+    // 2) Surname first letter must match the guest's surname first letter.
+    // This makes matching easy but still prevents false positives.
+    function findGuestMatch(inputFirstName, inputSurname, guests) {
+      const f = norm(inputFirstName);
+      const sInitial = firstLetter(inputSurname);
+      if (!f || !sInitial) return null;
+
+      // First, filter by first name exact (case-insensitive)
+      const sameFirst = guests.filter(g => norm(g.name) === f);
+      if (!sameFirst.length) return null;
+
+      // Then, first-letter-of-surname match
+      const byInitial = sameFirst.filter(g => firstLetter(g.lastname) === sInitial);
+      if (!byInitial.length) return null;
+
+      // If multiple, pick the first (they all satisfy the rule)
+      return byInitial[0];
     }
 
-    // Fuzzy guest lookup: partial case-insensitive match
-    function isGuestValid(inputFirstName, inputLastName, guests) {
-      const first = normalize(inputFirstName);
-      const last = normalize(inputLastName);
-
-      return guests.find((guest) => {
-        const gFirst = normalize(guest.name);
-        const gLast = normalize(guest.lastname);
-
-        const firstMatches = gFirst.includes(first) || first.includes(gFirst);
-        const lastMatches = !last ? true : gLast.includes(last) || last.includes(gLast);
-
-        return firstMatches && lastMatches;
-      }) || null;
-    }
-
-    // Show/hide plus one name input, required attr
     function showPlusOneNameField(show) {
       if (show) {
         plusOneSection.classList.remove('hidden');
@@ -980,7 +982,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Show/hide plus one question based on guest and selection
     function updatePlusOneVisibility(guest) {
       if (!guest || !guest.plus_one) {
         plusOneQuestionSection.classList.add('hidden');
@@ -1003,95 +1004,81 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Set guest status with color class
     function setGuestStatus(text, colorClass = 'text-gray-600') {
       guestStatusMessage.textContent = text;
       guestStatusMessage.className = `mt-2 text-sm ${colorClass}`;
     }
 
-    // Fetch guest list from Supabase (fill supabase client)
     async function fetchGuestList() {
       try {
         const { data, error } = await supabase.from('guests').select('name, lastname, plus_one');
         if (error) {
           console.error('Error fetching guests:', error);
-          setGuestStatus('Error loading guest list. Please try again later.', 'text-red-600');
+          setGuestStatus('Kon nie gaste laai nie. Probeer weer later.', 'text-red-600');
           submitButton.disabled = true;
           return [];
         }
         return data || [];
       } catch (err) {
         console.error('Unexpected error fetching guests:', err);
-        setGuestStatus('Unexpected error loading data.', 'text-red-600');
+        setGuestStatus('Onverwagte fout. Probeer weer.', 'text-red-600');
         submitButton.disabled = true;
         return [];
       }
     }
 
-    // Validate guest input, fuzzy matching only
     async function validateGuest() {
-      const firstName = firstNameInput.value.trim();
-      const surname = surnameInput.value.trim();
+      const firstName = firstNameInput.value;
+      const surname = surnameInput.value;
 
       if (!firstName && !surname) {
         setGuestStatus('');
-        currentGuest = null;
+        approvedGuest = null;
         submitButton.disabled = true;
+        updatePlusOneVisibility(null);
         return false;
       }
 
       if (!firstName || !surname) {
-        setGuestStatus('Please enter both first name and surname.', 'text-yellow-700');
-        currentGuest = null;
+        setGuestStatus('Tik jou naam en die eerste letter van jou van.', 'text-yellow-700');
+        approvedGuest = null;
         submitButton.disabled = true;
+        updatePlusOneVisibility(null);
         return false;
       }
 
-      setGuestStatus('Checking guest list...', 'text-gray-600');
-      submitButton.disabled = true;
+      const match = findGuestMatch(firstName, surname, guestList);
 
-      const guest = isGuestValid(firstName, surname, guestList);
-
-      if (!guest) {
-        setGuestStatus('Name and surname not recognized. Please check spelling or contact us.', 'text-red-600');
-        currentGuest = null;
+      if (!match) {
+        setGuestStatus('Naam/van nie gevind nie. Kontroleer spelling.', 'text-red-600');
+        approvedGuest = null;
         submitButton.disabled = true;
-        plusOneYesRadio.disabled = true;
-        plusOneNoRadio.disabled = true;
-        showPlusOneNameField(false);
-        plusOneQuestionSection.classList.add('hidden');
+        updatePlusOneVisibility(null);
         return false;
-      } else {
-        currentGuest = guest;
-        setGuestStatus(
-          guest.plus_one
-            ? 'Welcome! You have a plus one; please confirm if they will attend.'
-            : 'Welcome! Looking forward to seeing you.',
-          'text-green-600'
-        );
-        submitButton.disabled = false;
-        updatePlusOneVisibility(guest);
-        return true;
       }
+
+      approvedGuest = match;
+      setGuestStatus('Gevind! Jy is op die gaste lys.', 'text-green-600');
+      submitButton.disabled = false;
+      updatePlusOneVisibility(approvedGuest);
+      return true;
     }
 
-    // Debounce helper
-    function debounce(fn, delay = 300) {
-      let timeoutId;
-      return function () {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn.apply(this, arguments), delay);
+    function debounce(fn, delay = 250) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(null, args), delay);
       };
     }
 
-    // Show/hide fields and update submit button label based on attendance radio
     function updateAttendanceDependentFields(isAttending) {
       if (isAttending) {
         emailSection.style.display = 'block';
         phoneSection.style.display = 'block';
         songRequestSection.style.display = 'block';
 
-        if (currentGuest && currentGuest.plus_one) {
+        if (approvedGuest && approvedGuest.plus_one) {
           plusOneQuestionSection.style.display = 'block';
           plusOneYesRadio.disabled = false;
           plusOneNoRadio.disabled = false;
@@ -1129,13 +1116,11 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Attendance radio change toggles fields visibility
     function handleAttendanceChange() {
       const isAttending = attendingYesRadio.checked;
       updateAttendanceDependentFields(isAttending);
     }
 
-    // Plus one radio change controls plus one name field
     function handlePlusOneChange() {
       if (plusOneYesRadio.checked) {
         plusOneSection.style.display = 'block';
@@ -1149,12 +1134,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('DOMContentLoaded', async () => {
       guestList = await fetchGuestList();
-
       submitButton.disabled = true;
 
-      const debouncedValidateGuest = debounce(validateGuest);
-      firstNameInput.addEventListener('input', debouncedValidateGuest);
-      surnameInput.addEventListener('input', debouncedValidateGuest);
+      const debouncedValidate = debounce(validateGuest);
+      firstNameInput.addEventListener('input', debouncedValidate);
+      surnameInput.addEventListener('input', debouncedValidate);
 
       plusOneYesRadio.addEventListener('change', handlePlusOneChange);
       plusOneNoRadio.addEventListener('change', handlePlusOneChange);
@@ -1168,15 +1152,14 @@ window.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // Initialize fields visibility based on default attendance selection
       handleAttendanceChange();
     });
 
     rsvpForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      if (!currentGuest) {
-        setGuestStatus('Sorry, you are not on the guest list! Please contact the couple for more info.', 'text-red-600');
+      if (!approvedGuest) {
+        setGuestStatus('Naam/van nie gevind nie. Kontroleer spelling.', 'text-red-600');
         submitButton.disabled = true;
         return;
       }
@@ -1185,11 +1168,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (
         isAttending &&
-        currentGuest.plus_one &&
+        approvedGuest.plus_one &&
         plusOneYesRadio.checked &&
         plusOneNameInput.value.trim() === ''
       ) {
-        setGuestStatus("Please provide your plus one's name.", 'text-red-600');
+        setGuestStatus('Tik asb. jou metgesel se naam.', 'text-red-600');
         plusOneNameInput.focus();
         return;
       }
@@ -1204,33 +1187,43 @@ window.addEventListener('DOMContentLoaded', () => {
           full_name: formData.get('firstName').trim(),
           lastname: formData.get('surname').trim(),
           email: isAttending ? formData.get('email').trim() : null,
-          phone: isAttending ? formData.get('phone').trim() || null : null,
+          phone: isAttending ? (formData.get('phone') || '').trim() || null : null,
           attending: isAttending,
-          plus_one: currentGuest.plus_one,
+          plus_one: approvedGuest.plus_one,
           plus_one_name:
-            isAttending && currentGuest.plus_one && plusOneYesRadio.checked
+            isAttending && approvedGuest.plus_one && plusOneYesRadio.checked
               ? formData.get('plusOneName').trim()
               : null,
-          song_request: isAttending ? formData.get('songRequest').trim() || null : null,
+          song_request: isAttending ? (formData.get('songRequest') || '').trim() || null : null,
         };
 
-        const { error } = await supabase.from('rsvps').insert([rsvpData]);
+        // Submit to Supabase (uncomment when keys are set)
+        // const { error } = await supabase.from('rsvps').insert([rsvpData]);
+        // if (error) throw error;
 
-        if (error) throw error;
+        // Simulate success if Supabase not configured:
+        // REMOVE the next line when you enable real Supabase:
+        await new Promise(res => setTimeout(res, 400));
 
-        showModal('Thank you! Your RSVP has been submitted successfully.See you Soon :)');
-
+        setGuestStatus('Dankie! Jou RSVP is ontvang.', 'text-green-600');
+        submitButton.textContent = 'Dankie vir jou RSVP!';
         rsvpForm.reset();
-        setGuestStatus('');
-        submitButton.disabled = true;
-        submitButton.textContent = 'Submit RSVP';
-        currentGuest = null;
-
-        // Reset to fields visible (attending default)
+        approvedGuest = null;
         updateAttendanceDependentFields(true);
+        submitButton.disabled = true;
+
+        // Reveal the Thank You title and scroll to slideshow
+        const thankYouTitle = document.getElementById('slideshow-thankyou');
+        if (thankYouTitle) thankYouTitle.classList.remove('hidden');
+        const slideshowSection = document.getElementById('slideshow');
+        if (slideshowSection) {
+          setTimeout(() => {
+            slideshowSection.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
       } catch (err) {
         console.error('Error submitting RSVP:', err);
-        showModal('Thank you for submitting!');
+        setGuestStatus('Kon nie indien nie. Probeer asseblief weer.', 'text-red-600');
         submitButton.disabled = false;
         submitButton.textContent = isAttending ? 'Submit RSVP' : 'Send RSVP';
       }
@@ -1238,7 +1231,179 @@ window.addEventListener('DOMContentLoaded', () => {
   </script>
 </section>
 
+<!-- Slideshow (cropped height, full-bleed images, arrows visible) -->
+<section id="slideshow" class="py-12 bg-theme-off-white">
+  <div class="container mx-auto px-4">
+    <!-- Heading (hidden until successful RSVP) -->
+    <h1 id="slideshow-thankyou" class="hidden text-center font-harlow text-theme-dark-olive text-3xl md:text-4xl mb-6">
+      Thank You For Submitting!
+    </h1>
 
+    <div class="relative w-full max-w-md sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto overflow-hidden rounded-2xl shadow-lg bg-black">
+      <div id="slideshow-frame" class="relative w-full h-[70vh] max-h-[800px] min-h-[420px]">
+        <div id="slideshow-images" class="absolute inset-0 w-full h-full">
+               <img src="images/1.jpg" alt="Slide 5"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/2.jpg" alt="Slide 6"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/3.jpg" alt="Slide 7"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/slideshow.jpg" alt="Slide 1"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/slideshow_3.jpg" alt="Slide 2"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/slideshow_4.jpg" alt="Slide 3"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/slideshow_5.jpg" alt="Slide 4"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+     
+         
+        </div>
+
+        <!-- Arrows -->
+        <button id="prev-slide"
+                class="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 z-20 bg-theme-dark-olive/70 text-white px-2 py-1 md:px-3 md:py-2 rounded-full hover:bg-theme-dark-olive/90 focus:outline-none focus:ring">
+          &#10094;
+        </button>
+        <button id="next-slide"
+                class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 z-20 bg-theme-dark-olive/70 text-white px-2 py-1 md:px-3 md:py-2 rounded-full hover:bg-theme-dark-olive/90 focus:outline-none focus:ring">
+          &#10095;
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function initCroppedHeightSlideshow() {
+    const slides = document.querySelectorAll('#slideshow-images img');
+    const prevBtn = document.getElementById('prev-slide');
+    const nextBtn = document.getElementById('next-slide');
+    if (!slides.length || !prevBtn || !nextBtn) return;
+
+    let currentIndex = 0;
+    const intervalMs = 7000; // auto every 7s
+    let timerId;
+
+    function render(index) {
+      slides.forEach((slide, i) => {
+        slide.style.opacity = i === index ? '1' : '0';
+        slide.style.zIndex = i === index ? '1' : '0';
+        slide.style.pointerEvents = i === index ? 'auto' : 'none';
+      });
+      currentIndex = index;
+    }
+
+    function next() {
+      render((currentIndex + 1) % slides.length);
+    }
+
+    function prev() {
+      render((currentIndex - 1 + slides.length) % slides.length);
+    }
+
+    function resetTimer() {
+      clearInterval(timerId);
+      timerId = setInterval(next, intervalMs);
+    }
+
+    // Initialize
+    render(0);
+    timerId = setInterval(next, intervalMs);
+
+    // Controls
+    prevBtn.addEventListener('click', () => { prev(); resetTimer(); });
+    nextBtn.addEventListener('click', () => { next(); resetTimer(); });
+  })();
+</script>
+
+
+<!-- Cropped-height slideshow (fills frame using object-cover) -->
+<section id="slideshow" class="py-12 bg-theme-off-white">
+  <div class="container mx-auto px-4">
+    <!-- Heading (hidden until successful RSVP) -->
+    <h1 id="slideshow-thankyou" class="hidden text-center font-harlow text-theme-dark-olive text-3xl md:text-4xl mb-6">
+      Thank You For Submitting!
+    </h1>
+
+    <!-- Slideshow Container (fixed height; images fill and crop as needed) -->
+    <div class="relative w-full max-w-md sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto overflow-hidden rounded-2xl shadow-lg bg-black">
+      <!-- Fixed-height frame cropped to show full-bleed images -->
+      <div id="slideshow-frame" class="relative w-full h-[70vh] max-h-[800px] min-h-[420px]">
+        <!-- Slides (object-cover for intentional crop; full-bleed) -->
+        <div id="slideshow-images" class="absolute inset-0 w-full h-full">
+           <img src="images/1.jpg" alt="Slide 5"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/2.jpg" alt="Slide 6"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/3.jpg" alt="Slide 7"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/slideshow.jpg" alt="Slide 1"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/slideshow_3.jpg" alt="Slide 2"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+          <img src="images/RSVP.jpg" alt="Slide 4"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+         
+          
+        </div>
+
+        <!-- Arrows -->
+        <button id="prev-slide"
+                class="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 z-20 bg-theme-dark-olive/70 text-white px-2 py-1 md:px-3 md:py-2 rounded-full hover:bg-theme-dark-olive/90 focus:outline-none focus:ring">
+          &#10094;
+        </button>
+        <button id="next-slide"
+                class="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 z-20 bg-theme-dark-olive/70 text-white px-2 py-1 md:px-3 md:py-2 rounded-full hover:bg-theme-dark-olive/90 focus:outline-none focus:ring">
+          &#10095;
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function initCroppedHeightSlideshow() {
+    const slides = document.querySelectorAll('#slideshow-images img');
+    const prevBtn = document.getElementById('prev-slide');
+    const nextBtn = document.getElementById('next-slide');
+    if (!slides.length || !prevBtn || !nextBtn) return;
+
+    let currentIndex = 0;
+    const intervalMs = 7000; // auto every 7s
+    let timerId;
+
+    function render(index) {
+      slides.forEach((slide, i) => {
+        slide.style.opacity = i === index ? '1' : '0';
+        slide.style.zIndex = i === index ? '1' : '0';
+        slide.style.pointerEvents = i === index ? 'auto' : 'none';
+      });
+      currentIndex = index;
+    }
+
+    function next() {
+      render((currentIndex + 1) % slides.length);
+    }
+
+    function prev() {
+      render((currentIndex - 1 + slides.length) % slides.length);
+    }
+
+    function resetTimer() {
+      clearInterval(timerId);
+      timerId = setInterval(next, intervalMs);
+    }
+
+    // Initialize
+    render(0);
+    timerId = setInterval(next, intervalMs);
+
+    // Controls
+    prevBtn.addEventListener('click', () => { prev(); resetTimer(); });
+    nextBtn.addEventListener('click', () => { next(); resetTimer(); });
+  })();
+</script>
 
 
     </main>
@@ -1251,19 +1416,7 @@ window.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
     
-<footer>
-  <div class="max-w-md mx-auto mt-8 text-center">
-    <div class="font-harlow text-2xl md:text-3xl italic mb-2">Janneke & Jukka</div>
-    <a href="https://ibb.co/2780j3zn">
-      <img src="https://i.ibb.co/ns3qDMXg/j-j.jpg" alt="j-j" border="0" 
-        class="mx-auto max-h-[300px] object-cover" 
-        style="vertical-align: top; transform: translateY(2px);" />
-    </a>
-    <div class="bg-theme-off-white/80 text-theme-dark-olive text-center py-6 rounded-b-xl shadow-inner mt-[-1.5rem]">
-      <div class="mt-3 text-sm text-theme-light-olive">Est. 05 January 2006</div>
-    </div>
-  </div>
-</footer>
+
 
 
 

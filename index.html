@@ -263,11 +263,11 @@ section:not(:first-child)::before {
 
 
                     
-                    <a href="#schedule" class="hover:text-theme-light-olive transition duration-300">Skedule</a>
-                    <a href="#dresscode" class="hover:text-theme-light-olive transition duration-300">Dragkode</a>
-                    <a href="#gifts" class="hover:text-theme-light-olive transition duration-300">Geskenke</a>
-                    <a href="#venue" class="hover:text-theme-light-olive transition duration-300">Venue</a>
-                    <a href="#akkommodasie" class="hover:text-theme-light-olive">Akkommodasie</a>
+                    <a href="#schedule" class="hover:text-theme-light-olive transition duration-300">Tyd</a>
+                    <a href="#dresscode" class="hover:text-theme-light-olive transition duration-300">Drag</a>
+                    <a href="#gifts" class="hover:text-theme-light-olive transition duration-300">Geskenk</a>
+                    <a href="#Lokaal" class="hover:text-theme-light-olive transition duration-300">Lokaal</a>
+                    <a href="#akkommodasie" class="hover:text-theme-light-olive">Oornag</a>
                     <a href="#rsvp" class="hover:text-theme-light-olive transition duration-300">RSVP</a>
                      
 
@@ -275,49 +275,73 @@ section:not(:first-child)::before {
             </div>  
         </nav>
     </header>
-<section id="home" class="relative min-h-screen flex items-center justify-center text-white text-center p-0 m-0 bg-gray-900">
-  <div class="flex space-x-4 p-4">
-    <!-- First image with Day at bottom center -->
-    <div class="relative rounded-lg overflow-hidden" style="background-color: #1f2937; width: 30vw; height: 80vh; clip-path: inset(40px 0 40px 0);">
-      <img src="images/1.jpg" alt="Day" class="object-cover w-full h-full">
-      <h2 class="font-harlow text-5xl mb-6 text-theme-dark-olive absolute bottom-4 left-1/2 transform -translate-x-1/2 drop-shadow-lg">
-        05
-      </h2>
+<section id="home" class="relative min-h-screen flex items-start justify-center text-white text-center overflow-hidden p-0 m-0">
+  <div class="absolute inset-0 p-0 m-0">
+    <div 
+      class="w-full h-full bg-no-repeat bg-top p-0 m-0"
+      style="background-image: url('images/RSVP.jpg'); background-size: auto 100%; background-position: center top;">
     </div>
-
-    <!-- Second image with Month at bottom center -->
-    <div class="relative rounded-lg overflow-hidden" style="background-color: #1f2937; width: 30vw; height: 80vh; clip-path: inset(40px 0 40px 0);">
-      <img src="images/2.jpg" alt="Month" class="object-cover w-full h-full">
-      <h2 class="font-harlow text-5xl mb-6 text-theme-dark-olive absolute bottom-4 left-1/2 transform -translate-x-1/2 drop-shadow-lg">
-        12
-      </h2>
-    </div>
-
-    <!-- Third image with Year at bottom center -->
-    <div class="relative rounded-lg overflow-hidden" style="background-color: #1f2937; width: 30vw; height: 80vh; clip-path: inset(40px 0 40px 0);">
-      <img src="images/3.jpg" alt="Year" class="object-cover w-full h-full">
-      <h2 class="font-harlow text-5xl mb-6 text-theme-dark-olive absolute bottom-4 left-1/2 transform -translate-x-1/2 drop-shadow-lg">
-        2025
-      </h2>
-    </div>
+  </div>
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-full px-4">
+    <h1 class="font-signature text-7xl md:text-9xl lg:text-[10rem] leading-none text-white drop-shadow-xl m-0 p-0">Jukka & Janneke</h1>
+    <p class="font-times text-2xl md:text-3xl mt-4 text-white drop-shadow m-0 p-0">05.12.2025</p>
   </div>
 </section>
 
 
 
+<!-- Our Story Section -->
+<section id="story"  class="relative py-8 md:py-12 bg-theme-off-white overflow-hidden">
+  <div class="container mx-auto px-2 relative z-10">
+    <div class="flex flex-col md:flex-row items-start gap-12 md:gap-16 justify-center">
+      
+      <!-- Left Image -->
+      <div class="w-full md:w-auto">
+        <img src="images/storie.jpg" alt="Jukka and Janneke" 
+             class="rounded-lg shadow-2xl object-contain border-4" 
+             style="max-height: 600px; border:none; max-width: 100%;">
+      </div>
 
-<section id="home" class="relative min-h-screen flex items-start justify-center text-white text-center overflow-hidden p-0 m-0">
-  <div class="absolute inset-0 p-0 m-0">
-    <div 
-      class="w-full h-full bg-no-repeat bg-top bg-cover p-0 m-0"
-      style="background-image: url('images/cover_Final.png');">
-    </div>
-  </div>
-  <div class="relative z-10 flex flex-col items-center w-full mt-10">
-    <h1 class="font-signature text-7xl md:text-9xl lg:text-[10rem] leading-none text-white drop-shadow-xl mt-0 pt-0">Jukka & Janneke</h1>
-    <p class="font-times text-2xl md:text-3xl mt-4 text-white drop-shadow">05.12.2025</p>
-  </div>
+      <!-- Text Content -->
+      <div class="w-full md:w-1/2 text-center md:text-left relative z-10">
+        <h2 class="font-harlow text-5xl mb-6 text-theme-dark-olive">Ons Storie</h2>
+        <div class="font-mono text-lg text-theme-dark-olive space-y-4 leading-relaxed">
+          
+          <p>Jukka en Janneke se liefdesverhaal het begin toe hulle ses jaar oud was. Wat begin het as  ’n eenvoudige vriendskap  tussen twee kindertjies , het uiteindelik geblyk om iets baie meer spesiaal te wees — ’n God-geordende oomblik.  Mense wat hul interaksie gesien het, het baie keer gese : “Daai twee gaan eendag  saam opeindig.”   Hul was mekaar se beste vriende, en deur God se genade het hul  vriendskap gegroei tot in hul volwasse jare. Van hekkies hardloop langs mekaar tot hul  eerste jaar saam in Stellenbosch, elke hoofstuk het nuwe betekenis bygevoeg tot hul liefdes verhaal. </p>
+<p>Nou, terwyl   hul  gereed maak om te trou, glo ons vas dat hul storie ’n geskenk van God is — een wat hul met dankbaarheid en liefde in hul harte koester.</p>
+    </div>
+      </div>
+    </div>
+  </div>
+
+<div class="absolute inset-y-0 right-0 flex items-center justify-end z-0 pointer-events-none" style="margin-right: -10%;">
+  <img 
+    src="https://i.ibb.co/Zkrp55R/olive.png" 
+    alt="Watermark" 
+    class="w-[90%] opacity-10 object-contain" 
+  />
+</div>
+
+
+  <div
+    class="fade-bottom-story"
+    style="
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(246, 244, 241, 0) 0%,
+        #fdfcf9 100%
+      );
+      z-index: 10;
+    "
+  ></div>
 </section>
+
 
 <!-- Wedding Schedule Section -->
 <section id="schedule" class="py-14 md:py-14 bg-[#fdfcf9]">
@@ -333,7 +357,7 @@ section:not(:first-child)::before {
     <div class="section-title-hat">
   <img src="https://i.ibb.co/b5hgfQ7y/title.png" alt="Decorative hat" />
 </div>
-    <h2 class="font-harlow text-6xl mb-12 text-theme-dark-olive">Program vir die Dag</h2>
+    <h2 class="font-harlow text-6xl mb-12 text-theme-dark-olive">Skedule</h2>
     
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
       <!-- Arrival -->
@@ -377,7 +401,7 @@ section:not(:first-child)::before {
       </div>
     </div>
    <div id="countdown" class="mt-10 mb-14">
- <h3 class="font-serif text-3xl text-theme-dark-olive mb-4">Dae tot die Groot Dag</h3>
+ <h3 class="font-serif text-3xl text-theme-dark-olive mb-4">Ons Tel die Dae Af</h3>
 
 <div class="flex justify-center gap-8 text-theme-dark-olive font-harlow text-xl md:text-2xl">
   <div class="text-center">
@@ -402,12 +426,14 @@ section:not(:first-child)::before {
 
 
 
-<section id="dresscode" class="bg-theme-off-white flex items-center py-7 relative overflow-hidden fade-in">
+<section id="dresscode" class="bg-theme-off-white flex flex-col items-center py-7 relative overflow-hidden fade-in">
+  <div class="mx-auto px-2 sm:px-4 w-full max-w-5xl">
+    <!-- Styl Kode Title first -->
+    <h2 class="font-harlow text-7xl mb-12 text-theme-dark-olive text-center">Styl Kode</h2>
 
-  <div class="mx-auto px-2 sm:px-4">  <!-- tighter default side padding, slightly more on sm+ -->
-
-    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-      <!-- Left Image Column (now larger and more responsive) -->
+    <!-- Content: Image and text side by side or stacked on small screens -->
+    <div class="flex flex-col md:flex-row items-start gap-12 md:gap-16">
+      <!-- Image Column -->
       <div class="w-full md:w-1/3">
         <img 
           src="https://i.ibb.co/tfr06Cj/dresscolor.jpg" 
@@ -415,28 +441,26 @@ section:not(:first-child)::before {
           class="w-full h-full max-h-[300px] object-cover rounded-lg shadow-lg"
         />
       </div>
-      <!-- Text Content -->
-      <div class="relative w-full md:w-1/2 text-center md:text-left flex flex-col justify-center" style="padding-left: 25px; z-index: 10;">
-        <h2 class="font-harlow text-7xl mb-6 text-theme-dark-olive">Styl Kode</h2>
-       <div class="font-mono text-lg text-theme-dark-olive space-y-4 leading-relaxed">
-  <p>Ons nooi ons gaste hartlik uit om saam met ons te vier in formele en elegante kleredrag.</p>
-  <p>Dink aan gesofistikeerd, stylvol en gereed vir ’n onvergeetlike aand van feesviering. Ons het ’n inspirasie-“mood board” saamgestel om julle uitrustings aan te moedig. Ons kan nie wag om julle almal pragtig uitgedos te sien nie!</p>
-  <p class="mt-4 font-bold">Kleure om in gedagte te hou: aardkleure, sagte neutrale kleure en diep juweelkleure.</p>
-</div>
 
-      </div>
-      <!-- Watermark Image -->
-      <div class="absolute right-10 top-1/2 transform -translate-y-1/2 z-0 pointer-events-none hidden md:block">
-        <img 
-          src="images/olive5.png" 
-          alt="Watermark" 
-          class="w-full opacity-10 object-contain"
-        />
+      <!-- Text Content Column -->
+      <div class="relative w-full md:w-2/3 font-mono text-lg text-theme-dark-olive space-y-4 leading-relaxed" style="padding-left: 25px; z-index: 10;">
+        <p>Ons nooi ons gaste hartlik uit om saam met ons te vier in formele en elegante kleredrag.</p>
+        <p>Dink aan gesofistikeerd, stylvol en gereed vir ’n onvergeetlike aand van feesviering. Ons het ’n inspirasie-“mood board” saamgestel om julle uitrustings aan te moedig. Ons kan nie wag om julle almal pragtig uitgedos te sien nie!</p>
+        <p class="mt-4 font-bold">Kleure om in gedagte te hou: aardkleure, sagte neutrale kleure en diep juweelkleure.</p>
       </div>
     </div>
-    <div class="fade-bottom"></div>
+
+    <!-- Watermark Image (optional) -->
+    <div class="absolute right-10 top-1/2 transform -translate-y-1/2 z-0 pointer-events-none hidden md:block">
+      <img 
+        src="images/olive5.png" 
+        alt="Watermark" 
+        class="w-full opacity-10 object-contain"
+      />
+    </div>
   </div>
 </section>
+
 
 
 <section id="gifts" class="relative py-2 md:py-2 bg-theme-off-white overflow-hidden">
@@ -473,7 +497,7 @@ section:not(:first-child)::before {
   <div class="font-harlow mb-2" style="font-size: 1.5rem;">Bank Besonderhede</div>
   <div><b>Bank:</b> Absa</div>
   <div><b>Rekening Tipe:</b> tjekrekening</div>
-  <div><b>Rekening Houer:</b> J&J Geskenkrekening</div>
+  <div><b>Rekening Houer:</b> GeskenkFonds</div>
   <div><b>Rekening Nommer:</b> 9068813351</div>
 </div>
 
@@ -513,13 +537,13 @@ section:not(:first-child)::before {
 
 
 
-<!-- Venue Section -->
-<section id="venue"  class="relative py-8 md:py-8 bg-theme-off-white overflow-hidden">
+<!-- Lokaal Section -->
+<section id="Lokaal"  class="relative py-8 md:py-8 bg-theme-off-white overflow-hidden">
   <div class="container mx-auto px-2 relative z-10">
     <div class="section-title-hat">
   <img src="https://i.ibb.co/tpMfCtg7/title3.png" alt="Decorative hat" />
 </div>
-    <h2 class="font-harlow text-5xl mb-12 text-center text-theme-dark-olive">Die Trou Lokaal</h2>
+    <h2 class="font-harlow text-5xl mb-12 text-center text-theme-dark-olive">Lokaal</h2>
 
     <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
       <div class="w-full md:w-1/2 relative">
@@ -528,13 +552,13 @@ section:not(:first-child)::before {
 
       <!-- Details Section -->
       <div class="relative w-full md:w-1/2 space-y-8 z-10">
-       <div class="bg-[#D3CFB8] rounded-lg p-6 shadow-md text-theme-dark-olive">
+       <div class="bg-[#F6F4F1] rounded-lg p-6 shadow-md text-theme-dark-olive">
   <h3 class="font-harlow text-4xl mb-2">Naam</h3>
   <p class="font-sans text-lg mb-4">Bell and Blossom Wedding Venue</p>
   
 </div>
 
-        <div class="bg-[#D3CFB8] rounded-lg p-6 shadow-md text-theme-dark-olive">
+        <div class="bg-[#F6F4F1] rounded-lg p-6 shadow-md text-theme-dark-olive">
           <h3 class="font-harlow text-4xl mb-2">Adres</h3>
           <p class="font-sans text-lg">721 Klippan St, Montana, Pretoria, 0151</p>
           <a href="https://www.google.com/maps/dir//721+Klippan+St,+Montana,+Pretoria,+0151,+South+Africa" 
@@ -544,7 +568,7 @@ section:not(:first-child)::before {
     Get directions
   </a>
         </div>
-        <div class="bg-[#D3CFB8] rounded-lg p-6 shadow-md text-theme-dark-olive">
+        <div class="bg-[#F6F4F1] rounded-lg p-6 shadow-md text-theme-dark-olive">
           <h3 class="font-harlow text-4xl mb-2">ETA</h3>
           <p class="font-sans text-lg">Min of Meer 30 minute van Pretoria Oos</p>
         </div>
@@ -747,9 +771,26 @@ section:not(:first-child)::before {
     </div>
 
     <h2 class="font-harlow text-7xl text-theme-dark-olive mb-12 text-center w-full">RSVP</h2>
-
+ 
     <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start">
-      <div class="relative w-full max-w-md mx-auto">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start">
+      <!-- Small image block -->
+    <!-- Small image block -->
+<!-- Small image block -->
+<div class="flex-shrink-0 flex flex-col justify-center md:justify-start w-full md:w-auto mb-4 md:mb-0">
+  <img 
+    src="images/j-j.jpg" 
+    alt="Jukka & Janneke" 
+    class="rounded-md object-contain"
+    style="width: auto; height: 400px;"
+  />
+  <p class="text-center text-theme-dark-olive italic" style="font-size: 0.75rem; font-family: cursive; margin-top: 0.5rem;">
+    sedert Januarie 2006
+  </p>
+</div>
+<div class="relative w-full max-w-md mx-auto">
+
+
         <!-- Watermark behind the form -->
         <img
           src="https://i.ibb.co/KjnNgd49/watermark2.png"
@@ -1249,6 +1290,12 @@ section:not(:first-child)::before {
                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
           <img src="images/slideshow_3.jpg" alt="Slide 2"
                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+               <img src="images/slideshow_4.jpg" alt="Slide 2"
+     class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out"
+     style="object-position: top;" />
+     <img src="images/slideshow_5.jpeg" alt="Slide 7"
+               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
+
           <img src="images/RSVP.jpg" alt="Slide 4"
                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" />
          
